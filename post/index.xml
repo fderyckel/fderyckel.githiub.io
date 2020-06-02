@@ -2,36 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts | François de Ryckel</title>
-    <link>https://fderyckel.github.io/post/</link>
-      <atom:link href="https://fderyckel.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <link>/post/</link>
+      <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 25 May 2020 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>Posts</title>
-      <link>https://fderyckel.github.io/post/</link>
+      <link>/post/</link>
     </image>
     
     <item>
       <title>Disaster Tweets - Part I</title>
-      <link>https://fderyckel.github.io/post/disaster-tweets-part-i/</link>
+      <link>/post/disaster-tweets-part-i/</link>
       <pubDate>Mon, 25 May 2020 00:00:00 +0000</pubDate>
-      <guid>https://fderyckel.github.io/post/disaster-tweets-part-i/</guid>
+      <guid>/post/disaster-tweets-part-i/</guid>
       <description>
-&lt;script src=&#34;https://fderyckel.github.io/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
 
 &lt;div id=&#34;TOC&#34;&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#introduction&#34;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#base-line-model---lasso-model-on-just-text&#34;&gt;Base line model - Lasso model on just text&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#baseline-model---lasso-model-on-just-text&#34;&gt;Baseline model - Lasso model on just text&lt;/a&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#creating-a-model-workflow&#34;&gt;Creating a model workflow&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#analyis-of-results&#34;&gt;Analyis of results&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#analysis-of-results&#34;&gt;Analysis of results&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#picking-the-best-model&#34;&gt;Picking the best model&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#variable-importance&#34;&gt;variable importance&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#submission-of-results&#34;&gt;Submission of results&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#baseline-with-some-additional-features&#34;&gt;Baseline with some additional features&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#rebulding-the-data-frame-and-variables&#34;&gt;Rebulding the data frame and variables&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#rebuilding-the-data-frame-and-variables&#34;&gt;Rebuilding the data frame and variables&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#creating-and-tuning-a-model&#34;&gt;Creating and tuning a model&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#variable-importances&#34;&gt;Variable importances&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#submission-of-results-1&#34;&gt;Submission of results&lt;/a&gt;&lt;/li&gt;
@@ -44,16 +44,16 @@
 &lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;&lt;em&gt;Real or Not? NLP with Disaster Tweets&lt;/em&gt; Predict which Tweets are about real disasters and which ones are not.&lt;br /&gt;
-The task comes from a &lt;a href=&#34;https://www.kaggle.com/c/nlp-getting-started&#34;&gt;Kaggle competition&lt;/a&gt; which is to detect if a tweet about an emergency disaster is real. Hence, this is a NLP classification problem.&lt;/p&gt;
-&lt;p&gt;It is kind of easy for a human to see if a tweet is real or not, but it is harder for machine to detect it. For instance, the tweet &lt;em&gt;“look at the sky last night, it was ABLAZE”&lt;/em&gt;. Although there is the use of a disaster keyword like “ablaze”, the use of the word in this context wasn’t meant to refer to an emergency disaster. This is seen as &lt;em&gt;“a getting started”&lt;/em&gt; problem by Kaggle.&lt;/p&gt;
-&lt;p&gt;Being a volunteer firefighter in my local community for the last 3 years, this Kaggle task struck a chord with me. And yes, that is me on the picture. Imagine this heavy, well insulated PPE, super intense physical challenge and then the Saudi heat with the humidity of the Red Sea ;-)&lt;/p&gt;
+The task comes from a &lt;a href=&#34;https://www.kaggle.com/c/nlp-getting-started&#34;&gt;Kaggle competition&lt;/a&gt; which is to detect if a tweet about an emergency disaster is real. Hence, this is an NLP classification problem.&lt;/p&gt;
+&lt;p&gt;It is kind of easy for a human to see if a tweet is real or not, but it is harder for a machine to detect it. For instance, the tweet &lt;em&gt;“look at the sky last night, it was ABLAZE”&lt;/em&gt;. Although there is the use of a disaster keyword like “ablaze”, the use of that word in this context wasn’t meant to refer to an emergency disaster. This task is seen as &lt;em&gt;“a getting started”&lt;/em&gt; problem by Kaggle.&lt;/p&gt;
+&lt;p&gt;As I’m a volunteer firefighter in my local community for the last 3 years, this Kaggle task struck a chord with me. And yes, that is me on the picture. Imagine this heavy, well insulated PPE, super intense physical challenge and then the Saudi heat with the humidity of the Red Sea ;-)&lt;/p&gt;
 &lt;p&gt;I am planning on a 3 parts post.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;First part is very much BOW (bag of word) approach using Lasso.&lt;/li&gt;
-&lt;li&gt;Second part is still BOW approaches using SVD. Modeling with Lasso and Xgboost.&lt;/li&gt;
-&lt;li&gt;Third part is word embedding using Glove. (Still trying to make it work with Bert pre-trained models. Maybe I’ll have that sort out by the end. )&lt;/li&gt;
+&lt;li&gt;The first part is very much BOW (bag of word) approach using Lasso.&lt;/li&gt;
+&lt;li&gt;The second part is still BOW approaches using SVD. Modelling with Lasso and Xgboost.&lt;/li&gt;
+&lt;li&gt;The third part is word embedding using Glove. (Still trying to make it work with Bert pre-trained models. Maybe I’ll have that sort out by the end. )&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Throughout these posts, I will use packages from 3 main sets: the &lt;a href=&#34;https://www.tidyverse.org/&#34;&gt;tidyverse&lt;/a&gt; for data wrangling, the &lt;a href=&#34;https://www.tidymodels.org/&#34;&gt;tidymodels&lt;/a&gt; for modeling and the &lt;a href=&#34;https://www.tidytextmining.com/&#34;&gt;tidytext&lt;/a&gt; for dealing with text data. These sets of packages make a coherent whole and, in my opinion, makes it easier to learn the data analysis &amp;amp; modeling workflow. It is, of course, not the only one. There are many other alternatives in R.&lt;/p&gt;
+&lt;p&gt;Throughout these posts, I will use packages from 3 main sets: the &lt;a href=&#34;https://www.tidyverse.org/&#34;&gt;tidyverse&lt;/a&gt; for data wrangling, the &lt;a href=&#34;https://www.tidymodels.org/&#34;&gt;tidymodels&lt;/a&gt; for modelling and the &lt;a href=&#34;https://www.tidytextmining.com/&#34;&gt;tidytext&lt;/a&gt; for dealing with text data. These sets of packages make a coherent whole and, in my opinion, makes it easier to learn the data analysis &amp;amp; modelling workflow. It is, of course, not the only one. There are many other alternatives in R.&lt;/p&gt;
 &lt;p&gt;Loading the libraries first.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(readr)      # to read and write (import / export) any type into our R console.
 library(dplyr)      # for pretty much all our data wrangling
@@ -65,7 +65,7 @@ library(ggplot2)    # to plot
 
 library(kableExtra) # for making pretty table on html
 
-library(rsample)    # to split df with initial_split() a
+library(rsample)    # to split df with initial_split() 
                     # to use resampling techniques with bootstrap() and vfold_cv()
 library(parsnip)    # the main engine that run the models 
 library(workflows)  # to use workflow()
@@ -526,12 +526,12 @@ prop.table(table(df_train_tr$target_bin))   # same as original set. &lt;/code&gt
 ## 0.4296972 0.5703028&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_train_te &amp;lt;- testing(rsplit_df)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The &lt;strong&gt;initial_split()&lt;/strong&gt; function gives a rsplit object (rsplit_df in our case) that can be used with the training() and testing() functions to extract the data in each split. The strata argument “help ensure that the number of data points in the training data is equivalent to the proportions in the original data set.”&lt;/p&gt;
-&lt;p&gt;A good thing that I notice is the data set is well-balanced-ish with a 57% - 43% in the occurrence of the outcomes (0, 1). So we won’t need to add more/remove data in our set to over-compensate. That’s one less problem that we have to deal with.&lt;/p&gt;
+&lt;p&gt;A good thing to notice is a well-balanced data set with a 57% - 43% in the occurrence of the outcomes (0, 1). So we won’t need to add more/remove data in our set to over-compensate. That’s one less problem that we have to deal with.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&#34;base-line-model---lasso-model-on-just-text&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Base line model - Lasso model on just text&lt;/h1&gt;
+&lt;div id=&#34;baseline-model---lasso-model-on-just-text&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Baseline model - Lasso model on just text&lt;/h1&gt;
 &lt;p&gt;In this post, we skip some of the usual data exploration (wordcloud are pretty, but are there really useful?) and start straight into building a model. This very first model, will be our base case. We will build a Lasso classification model based just on a cleaner version of the text of the tweets.&lt;/p&gt;
-&lt;p&gt;For a Lasso modeling task, we can only use numerical values. Then we will need to normalize them. Also, we cannot include missing value. So, we remove these columns with missing values. So basically, we just use the text data as predictor. We’ll numerize that text column using the tf_idf. For more on transforming text into tf_idf, you can check &lt;a href=&#34;https://www.tidytextmining.com/tfidf.html#the-bind_tf_idf-function&#34;&gt;this section&lt;/a&gt; of the David Robinson &amp;amp; Julia Silge book on &lt;em&gt;Tidy Text Mining&lt;/em&gt;. Most of the ideas here come from her book and &lt;a href=&#34;https://juliasilge.com/&#34;&gt;blog&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For a Lasso modelling task, we can only use numerical values. Then we will need to normalize them. Also, we cannot include missing value. So, we remove these columns with missing values. So basically, we just use the text data as the predictor. We’ll numerize that text column using the tf_idf. For more on transforming text into tf_idf, you can check &lt;a href=&#34;https://www.tidytextmining.com/tfidf.html#the-bind_tf_idf-function&#34;&gt;this section&lt;/a&gt; of the David Robinson &amp;amp; Julia Silge book on &lt;em&gt;Tidy Text Mining&lt;/em&gt;. Most of the ideas here come from her book and &lt;a href=&#34;https://juliasilge.com/&#34;&gt;blog&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To clean our tweets, we will use the &lt;strong&gt;recipes&lt;/strong&gt; and &lt;strong&gt;textrecipes&lt;/strong&gt; packages. So, the exact same steps can later be done more easily on the testing set.&lt;/p&gt;
 &lt;p&gt;In order, we’ll tokenize the tweets (at the same time, that will remove punctuations and lowercase all text), remove stop words, and keep only the first 1250 tokens. On the last step, we’ll transform our words into numerical values by transforming them to an tf_idf.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidytext)
@@ -586,11 +586,11 @@ tune_lasso &amp;lt;- tune_grid(
   metrics = metric_set(roc_auc, f_meas, accuracy), 
   control   = control_grid(verbose = TRUE)
 )&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;I belive that the tune_grid() function is the only place in our modeling workflow where parallel processing is being used. All the other tasks are single core processing.&lt;/p&gt;
-&lt;p&gt;What have we done? First, we have created a model workflow, with workflow(), using a recipe for pre-processing and a model type, logistic_reg(). Second, we fine tuned the parameters of our model. In this case, we only fine tuned the penalty parameter.&lt;/p&gt;
+&lt;p&gt;I believe that the tune_grid() function is the only place in our modelling workflow where parallel processing is being used. All the other tasks are single core processing.&lt;/p&gt;
+&lt;p&gt;What have we done? First, we have created a model workflow, with workflow(), using a recipe for pre-processing and a model type, logistic_reg(). Second, we fine-tuned the parameters of our model. In this case, we only fine-tuned the penalty parameter.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&#34;analyis-of-results&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Analyis of results&lt;/h2&gt;
+&lt;div id=&#34;analysis-of-results&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Analysis of results&lt;/h2&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# we collect the results of our sample to see what penalty value we will pick. 
 metrics &amp;lt;- tune_lasso %&amp;gt;% collect_metrics()
 
@@ -602,7 +602,7 @@ metrics %&amp;gt;%
   geom_line() + 
   facet_wrap(~.metric) + 
   scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/checking-metrics_lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/checking-metrics_lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Using the plots, we can see that there is only a small window of penalty values that will increase the performance of of the model. We keep that in mind for the next time we create our grid of penalties.&lt;/p&gt;
 &lt;p&gt;Because our dataset is somehow balance, we could choose &lt;strong&gt;accuracy&lt;/strong&gt; as a measure of model validity. The best accuracy on this base model is 76.2 % for the training set. That said because Kaggle choose F1 as a performance metric, let’s choose the penalty with highest &lt;strong&gt;f_meas&lt;/strong&gt; and fit it to our testing set.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# let check the penalties values that give the best performances
@@ -939,7 +939,7 @@ write_rds(x = model_lasso_base, path = &amp;quot;~/disaster_tweets/data/model_la
   geom_col(show.legend = FALSE) +
   facet_wrap(~Sign, scales = &amp;quot;free_y&amp;quot;) +
   labs(y = NULL) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/checking-variable-importance-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/checking-variable-importance-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;For some reasons, I need to change the label of each graph. The “POS” terms will most likely give place to not a real emergency tweet.&lt;/p&gt;
 &lt;p&gt;Although I am glad that the “lmao” expression is more often related to tweets that are not about real emergency, I am confused as to why “https” is one side and “t.co” on the other sides. They are both about links. 🤔&lt;/p&gt;
 &lt;/div&gt;
@@ -961,8 +961,8 @@ prediction_lasso_base %&amp;gt;% select(id, target) %&amp;gt;% write_csv(path = 
 &lt;p&gt;In this new model, we will do some feature engineering at a basic level and see if that helps to increase the model performance and especially its accuracy. We continue to use the same lasso model. That means everything has to be converted back to numerical variables.&lt;/p&gt;
 &lt;p&gt;We create another version of the basic df.
 Here are the feature engineering steps we will take:&lt;/p&gt;
-&lt;div id=&#34;rebulding-the-data-frame-and-variables&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Rebulding the data frame and variables&lt;/h2&gt;
+&lt;div id=&#34;rebuilding-the-data-frame-and-variables&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Rebuilding the data frame and variables&lt;/h2&gt;
 &lt;p&gt;In the following step, there were a lots of trials and errors in regards of the order with which we were performing the changes on the tweets.&lt;/p&gt;
 &lt;p&gt;We add the following variables:&lt;/p&gt;
 &lt;ul&gt;
@@ -981,13 +981,13 @@ Here are the feature engineering steps we will take:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;remove all digits (although I am suspecting that 4 digits date like 2015 or 2017 could have an influence)&lt;/li&gt;
 &lt;li&gt;remove all mentions (who is being mentioned might add little value, we have a variable if someone is mentioned)&lt;/li&gt;
-&lt;li&gt;remove all http links. The link itself is not discriminatary (does not add any information). We just recorded at the previous step if we have a link, so we can delete it&lt;/li&gt;
+&lt;li&gt;remove all http links. The link itself is not discriminatory (does not add any information). We just recorded at the previous step if we have a link, so we can delete it&lt;/li&gt;
 &lt;li&gt;lemmatize all words&lt;/li&gt;
 &lt;li&gt;remove all non latin letters&lt;br /&gt;
 &lt;/li&gt;
 &lt;li&gt;count if there are multiple repeated characters in a row (like omggggg). My thinking is that real emergency tweets might use less of these.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Because of all the cleaning, better make it a function that we can apply to both training and laster on testing set.&lt;/p&gt;
+&lt;p&gt;Because of all the cleaning, better make it a function that we can apply to both training and later on testing set.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;clean_tweets &amp;lt;- function(file_path){
   df &amp;lt;- read_csv(file_path) %&amp;gt;% as_tibble()  %&amp;gt;% 
     mutate(number_hashtag = str_count(string = text, pattern = &amp;quot;#&amp;quot;), 
@@ -1926,9 +1926,9 @@ binary
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;Note1: the transformed df after the recipes steps is 7613 x 1237, that is with 1750 maxtokens and pca on 95% variance. Also we only do PCA on the words (not the extra variable) accuracy = 79.8 and f1 = 74.6.&lt;/p&gt;
-&lt;p&gt;Note2: And with 2000 maxtokens, 95% threshold on pca, no nomralization we got 79.8% accuracy and f1 = 74.9. df is 7613 x 1369.&lt;/p&gt;
-&lt;p&gt;Note3: And with 1750 maxtokens, no pca, we got 79.9% accuracy ad f1 = 74.2.&lt;/p&gt;
-&lt;p&gt;Note4: And with 2500 maxtokens, 95% threshold on pca, no nomralization we got 80.0% accuracy and f1 = 74.98. df is 7613 x 1630. And we get the exact same results if we use normalization.&lt;/p&gt;
+&lt;p&gt;Note2: And with 2000 maxtokens, 95% threshold on pca, no normalization we got accuracy = 79.8% and f1 = 74.9%. df is 7613 x 1369.&lt;/p&gt;
+&lt;p&gt;Note3: And with 1750 maxtokens, no pca, we got accuracy = 79.9% ad f1 = 74.2%.&lt;/p&gt;
+&lt;p&gt;Note4: And with 2500 maxtokens, 95% threshold on pca, no normalization we got accuracy = 80.0% and f1 = 74.98%. df is 7613 x 1630. And we get the exact same results if we use normalization.&lt;/p&gt;
 &lt;p&gt;All this fine tuning gave us a very small increase in both accuracy and F1 scores. There is also an increase in ROC-AUC. Considering these are the performances on the trained data, and considering the leakage due to normalization, pca and tf-idf, these might be optimist results. Let’s see.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;best_metric &amp;lt;- tune_lasso %&amp;gt;% select_best(&amp;quot;f_meas&amp;quot;)
 
@@ -1977,7 +1977,7 @@ read_rds(&amp;quot;~/disaster_tweets/data/model_lasso_enhanced.rds&amp;quot;) %&
   facet_wrap(~Sign, scales = &amp;quot;free_y&amp;quot;) +
   labs(y = NULL, x = &amp;quot;Sign&amp;quot;)  &lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:vip-lasso-enhanced&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/vip-lasso-enhanced-1.png&#34; alt=&#34;Most important variables.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/vip-lasso-enhanced-1.png&#34; alt=&#34;Most important variables.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 1: Most important variables.
 &lt;/p&gt;
@@ -2040,7 +2040,7 @@ rm(list = ls())&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Any feedback/advises on the 2 things above are really welcome ;-)&lt;/p&gt;
 &lt;p&gt;Lessons learned:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;the easiest model in the second lasso was the best. All the other fanciers, more computationally intensed attempts didn’t provide better results.&lt;/li&gt;
+&lt;li&gt;the easiest model in the second lasso was the best. All the other fanciers, more computationally intense attempts didn’t provide better results.&lt;/li&gt;
 &lt;li&gt;normalization has been recommended on Lasso models. In our case, normalizing after the tf_idf step or after the pca didn’t change much to our model. So in regards to being parsimonious, I would say I can skip these steps in the future.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
@@ -2058,9 +2058,9 @@ rm(list = ls())&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>Writing technical content in Academic</title>
-      <link>https://fderyckel.github.io/post/writing-technical-content/</link>
+      <link>/post/writing-technical-content/</link>
       <pubDate>Fri, 12 Jul 2019 00:00:00 +0000</pubDate>
-      <guid>https://fderyckel.github.io/post/writing-technical-content/</guid>
+      <guid>/post/writing-technical-content/</guid>
       <description>&lt;p&gt;Academic is designed to give technical content creators a seamless experience. You can focus on the content and Academic handles the rest.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Highlight your code snippets, take notes on math classes, and draw diagrams from textual representation.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;On this page, you&amp;rsquo;ll find some examples of the types of technical content that can be rendered with Academic.&lt;/p&gt;
@@ -2311,9 +2311,9 @@ You found me!
     
     <item>
       <title>Display Jupyter Notebooks with Academic</title>
-      <link>https://fderyckel.github.io/post/jupyter/</link>
+      <link>/post/jupyter/</link>
       <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
-      <guid>https://fderyckel.github.io/post/jupyter/</guid>
+      <guid>/post/jupyter/</guid>
       <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from IPython.core.display import Image
 Image(&#39;https://www.python.org/static/community_logos/python-logo-master-v3-TM-flattened.png&#39;)
 &lt;/code&gt;&lt;/pre&gt;
@@ -2360,9 +2360,9 @@ date: 2019-09-01
     
     <item>
       <title>Academic: the website builder for Hugo</title>
-      <link>https://fderyckel.github.io/post/getting-started/</link>
+      <link>/post/getting-started/</link>
       <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>https://fderyckel.github.io/post/getting-started/</guid>
+      <guid>/post/getting-started/</guid>
       <description>&lt;p&gt;&lt;strong&gt;Create a free website with Academic using Markdown, Jupyter, or RStudio. Choose a beautiful color theme and build anything with the Page Builder - over 40 &lt;em&gt;widgets&lt;/em&gt;, &lt;em&gt;themes&lt;/em&gt;, and &lt;em&gt;language packs&lt;/em&gt; included!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;
 &lt;a href=&#34;https://academic-demo.netlify.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Check out the latest &lt;strong&gt;demo&lt;/strong&gt;&lt;/a&gt; of what you&amp;rsquo;ll get in less than 10 minutes, or 
@@ -2504,9 +2504,9 @@ date: 2019-09-01
     
     <item>
       <title>Hello R Markdown</title>
-      <link>https://fderyckel.github.io/post/2015-07-23-r-rmarkdown/</link>
+      <link>/post/2015-07-23-r-rmarkdown/</link>
       <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
-      <guid>https://fderyckel.github.io/post/2015-07-23-r-rmarkdown/</guid>
+      <guid>/post/2015-07-23-r-rmarkdown/</guid>
       <description>
 
 
@@ -2543,7 +2543,7 @@ pie(
   init.angle = -50, border = NA
 )&lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:pie&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;https://fderyckel.github.io/post/2015-07-23-r-rmarkdown_files/figure-html/pie-1.png&#34; alt=&#34;A fancy pie chart.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/pie-1.png&#34; alt=&#34;A fancy pie chart.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 1: A fancy pie chart.
 &lt;/p&gt;

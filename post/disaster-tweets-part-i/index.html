@@ -27,10 +27,10 @@
   
     
   
-  <meta name="description" content="Introduction Base line model - Lasso model on just text Creating a model workflow Analyis of results Picking the best model variable importance Submission of results  Baseline with some additional features Rebulding the data frame and variables Creating and tuning a model Variable importances Submission of results  Wonderings and lessons learned.">
+  <meta name="description" content="Introduction Baseline model - Lasso model on just text Creating a model workflow Analysis of results Picking the best model variable importance Submission of results  Baseline with some additional features Rebuilding the data frame and variables Creating and tuning a model Variable importances Submission of results  Wonderings and lessons learned.">
 
   
-  <link rel="alternate" hreflang="en-us" href="https://fderyckel.github.io/post/disaster-tweets-part-i/">
+  <link rel="alternate" hreflang="en-us" href="/post/disaster-tweets-part-i/">
 
   
 
@@ -217,7 +217,7 @@
   <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="https://fderyckel.github.io/post/disaster-tweets-part-i/">
+  <link rel="canonical" href="/post/disaster-tweets-part-i/">
 
   
   
@@ -235,10 +235,10 @@
   <meta property="twitter:creator" content="@Read_The_Dung">
   
   <meta property="og:site_name" content="François de Ryckel">
-  <meta property="og:url" content="https://fderyckel.github.io/post/disaster-tweets-part-i/">
+  <meta property="og:url" content="/post/disaster-tweets-part-i/">
   <meta property="og:title" content="Disaster Tweets - Part I | François de Ryckel">
-  <meta property="og:description" content="Introduction Base line model - Lasso model on just text Creating a model workflow Analyis of results Picking the best model variable importance Submission of results  Baseline with some additional features Rebulding the data frame and variables Creating and tuning a model Variable importances Submission of results  Wonderings and lessons learned."><meta property="og:image" content="https://fderyckel.github.io/post/disaster-tweets-part-i/featured.jpg">
-  <meta property="twitter:image" content="https://fderyckel.github.io/post/disaster-tweets-part-i/featured.jpg"><meta property="og:locale" content="en-us">
+  <meta property="og:description" content="Introduction Baseline model - Lasso model on just text Creating a model workflow Analysis of results Picking the best model variable importance Submission of results  Baseline with some additional features Rebuilding the data frame and variables Creating and tuning a model Variable importances Submission of results  Wonderings and lessons learned."><meta property="og:image" content="/post/disaster-tweets-part-i/featured.jpg">
+  <meta property="twitter:image" content="/post/disaster-tweets-part-i/featured.jpg"><meta property="og:locale" content="en-us">
   
     
       <meta property="article:published_time" content="2020-05-25T00:00:00&#43;00:00">
@@ -267,12 +267,12 @@
   "@type": "BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://fderyckel.github.io/post/disaster-tweets-part-i/"
+    "@id": "/post/disaster-tweets-part-i/"
   },
   "headline": "Disaster Tweets - Part I",
   
   "image": [
-    "https://fderyckel.github.io/post/disaster-tweets-part-i/featured.jpg"
+    "/post/disaster-tweets-part-i/featured.jpg"
   ],
   
   "datePublished": "2020-05-25T00:00:00Z",
@@ -288,10 +288,10 @@
     "name": "François de Ryckel",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
+      "url": "/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
     }
   },
-  "description": "Introduction Base line model - Lasso model on just text Creating a model workflow Analyis of results Picking the best model variable importance Submission of results  Baseline with some additional features Rebulding the data frame and variables Creating and tuning a model Variable importances Submission of results  Wonderings and lessons learned."
+  "description": "Introduction Baseline model - Lasso model on just text Creating a model workflow Analysis of results Picking the best model variable importance Submission of results  Baseline with some additional features Rebuilding the data frame and variables Creating and tuning a model Variable importances Submission of results  Wonderings and lessons learned."
 }
 </script>
 
@@ -651,7 +651,7 @@
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    22 min read
+    23 min read
   </span>
   
 
@@ -707,15 +707,15 @@
 <div id="TOC">
 <ul>
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#base-line-model---lasso-model-on-just-text">Base line model - Lasso model on just text</a><ul>
+<li><a href="#baseline-model---lasso-model-on-just-text">Baseline model - Lasso model on just text</a><ul>
 <li><a href="#creating-a-model-workflow">Creating a model workflow</a></li>
-<li><a href="#analyis-of-results">Analyis of results</a></li>
+<li><a href="#analysis-of-results">Analysis of results</a></li>
 <li><a href="#picking-the-best-model">Picking the best model</a></li>
 <li><a href="#variable-importance">variable importance</a></li>
 <li><a href="#submission-of-results">Submission of results</a></li>
 </ul></li>
 <li><a href="#baseline-with-some-additional-features">Baseline with some additional features</a><ul>
-<li><a href="#rebulding-the-data-frame-and-variables">Rebulding the data frame and variables</a></li>
+<li><a href="#rebuilding-the-data-frame-and-variables">Rebuilding the data frame and variables</a></li>
 <li><a href="#creating-and-tuning-a-model">Creating and tuning a model</a></li>
 <li><a href="#variable-importances">Variable importances</a></li>
 <li><a href="#submission-of-results-1">Submission of results</a></li>
@@ -728,16 +728,16 @@
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p><em>Real or Not? NLP with Disaster Tweets</em> Predict which Tweets are about real disasters and which ones are not.<br />
-The task comes from a <a href="https://www.kaggle.com/c/nlp-getting-started">Kaggle competition</a> which is to detect if a tweet about an emergency disaster is real. Hence, this is a NLP classification problem.</p>
-<p>It is kind of easy for a human to see if a tweet is real or not, but it is harder for machine to detect it. For instance, the tweet <em>“look at the sky last night, it was ABLAZE”</em>. Although there is the use of a disaster keyword like “ablaze”, the use of the word in this context wasn’t meant to refer to an emergency disaster. This is seen as <em>“a getting started”</em> problem by Kaggle.</p>
-<p>Being a volunteer firefighter in my local community for the last 3 years, this Kaggle task struck a chord with me. And yes, that is me on the picture. Imagine this heavy, well insulated PPE, super intense physical challenge and then the Saudi heat with the humidity of the Red Sea ;-)</p>
+The task comes from a <a href="https://www.kaggle.com/c/nlp-getting-started">Kaggle competition</a> which is to detect if a tweet about an emergency disaster is real. Hence, this is an NLP classification problem.</p>
+<p>It is kind of easy for a human to see if a tweet is real or not, but it is harder for a machine to detect it. For instance, the tweet <em>“look at the sky last night, it was ABLAZE”</em>. Although there is the use of a disaster keyword like “ablaze”, the use of that word in this context wasn’t meant to refer to an emergency disaster. This task is seen as <em>“a getting started”</em> problem by Kaggle.</p>
+<p>As I’m a volunteer firefighter in my local community for the last 3 years, this Kaggle task struck a chord with me. And yes, that is me on the picture. Imagine this heavy, well insulated PPE, super intense physical challenge and then the Saudi heat with the humidity of the Red Sea ;-)</p>
 <p>I am planning on a 3 parts post.</p>
 <ul>
-<li>First part is very much BOW (bag of word) approach using Lasso.</li>
-<li>Second part is still BOW approaches using SVD. Modeling with Lasso and Xgboost.</li>
-<li>Third part is word embedding using Glove. (Still trying to make it work with Bert pre-trained models. Maybe I’ll have that sort out by the end. )</li>
+<li>The first part is very much BOW (bag of word) approach using Lasso.</li>
+<li>The second part is still BOW approaches using SVD. Modelling with Lasso and Xgboost.</li>
+<li>The third part is word embedding using Glove. (Still trying to make it work with Bert pre-trained models. Maybe I’ll have that sort out by the end. )</li>
 </ul>
-<p>Throughout these posts, I will use packages from 3 main sets: the <a href="https://www.tidyverse.org/">tidyverse</a> for data wrangling, the <a href="https://www.tidymodels.org/">tidymodels</a> for modeling and the <a href="https://www.tidytextmining.com/">tidytext</a> for dealing with text data. These sets of packages make a coherent whole and, in my opinion, makes it easier to learn the data analysis &amp; modeling workflow. It is, of course, not the only one. There are many other alternatives in R.</p>
+<p>Throughout these posts, I will use packages from 3 main sets: the <a href="https://www.tidyverse.org/">tidyverse</a> for data wrangling, the <a href="https://www.tidymodels.org/">tidymodels</a> for modelling and the <a href="https://www.tidytextmining.com/">tidytext</a> for dealing with text data. These sets of packages make a coherent whole and, in my opinion, makes it easier to learn the data analysis &amp; modelling workflow. It is, of course, not the only one. There are many other alternatives in R.</p>
 <p>Loading the libraries first.</p>
 <pre class="r"><code>library(readr)      # to read and write (import / export) any type into our R console.
 library(dplyr)      # for pretty much all our data wrangling
@@ -749,7 +749,7 @@ library(ggplot2)    # to plot
 
 library(kableExtra) # for making pretty table on html
 
-library(rsample)    # to split df with initial_split() a
+library(rsample)    # to split df with initial_split() 
                     # to use resampling techniques with bootstrap() and vfold_cv()
 library(parsnip)    # the main engine that run the models 
 library(workflows)  # to use workflow()
@@ -1210,12 +1210,12 @@ prop.table(table(df_train_tr$target_bin))   # same as original set. </code></pre
 ## 0.4296972 0.5703028</code></pre>
 <pre class="r"><code>df_train_te &lt;- testing(rsplit_df)</code></pre>
 <p>The <strong>initial_split()</strong> function gives a rsplit object (rsplit_df in our case) that can be used with the training() and testing() functions to extract the data in each split. The strata argument “help ensure that the number of data points in the training data is equivalent to the proportions in the original data set.”</p>
-<p>A good thing that I notice is the data set is well-balanced-ish with a 57% - 43% in the occurrence of the outcomes (0, 1). So we won’t need to add more/remove data in our set to over-compensate. That’s one less problem that we have to deal with.</p>
+<p>A good thing to notice is a well-balanced data set with a 57% - 43% in the occurrence of the outcomes (0, 1). So we won’t need to add more/remove data in our set to over-compensate. That’s one less problem that we have to deal with.</p>
 </div>
-<div id="base-line-model---lasso-model-on-just-text" class="section level1">
-<h1>Base line model - Lasso model on just text</h1>
+<div id="baseline-model---lasso-model-on-just-text" class="section level1">
+<h1>Baseline model - Lasso model on just text</h1>
 <p>In this post, we skip some of the usual data exploration (wordcloud are pretty, but are there really useful?) and start straight into building a model. This very first model, will be our base case. We will build a Lasso classification model based just on a cleaner version of the text of the tweets.</p>
-<p>For a Lasso modeling task, we can only use numerical values. Then we will need to normalize them. Also, we cannot include missing value. So, we remove these columns with missing values. So basically, we just use the text data as predictor. We’ll numerize that text column using the tf_idf. For more on transforming text into tf_idf, you can check <a href="https://www.tidytextmining.com/tfidf.html#the-bind_tf_idf-function">this section</a> of the David Robinson &amp; Julia Silge book on <em>Tidy Text Mining</em>. Most of the ideas here come from her book and <a href="https://juliasilge.com/">blog</a>.</p>
+<p>For a Lasso modelling task, we can only use numerical values. Then we will need to normalize them. Also, we cannot include missing value. So, we remove these columns with missing values. So basically, we just use the text data as the predictor. We’ll numerize that text column using the tf_idf. For more on transforming text into tf_idf, you can check <a href="https://www.tidytextmining.com/tfidf.html#the-bind_tf_idf-function">this section</a> of the David Robinson &amp; Julia Silge book on <em>Tidy Text Mining</em>. Most of the ideas here come from her book and <a href="https://juliasilge.com/">blog</a>.</p>
 <p>To clean our tweets, we will use the <strong>recipes</strong> and <strong>textrecipes</strong> packages. So, the exact same steps can later be done more easily on the testing set.</p>
 <p>In order, we’ll tokenize the tweets (at the same time, that will remove punctuations and lowercase all text), remove stop words, and keep only the first 1250 tokens. On the last step, we’ll transform our words into numerical values by transforming them to an tf_idf.</p>
 <pre class="r"><code>library(tidytext)
@@ -1270,11 +1270,11 @@ tune_lasso &lt;- tune_grid(
   metrics = metric_set(roc_auc, f_meas, accuracy), 
   control   = control_grid(verbose = TRUE)
 )</code></pre>
-<p>I belive that the tune_grid() function is the only place in our modeling workflow where parallel processing is being used. All the other tasks are single core processing.</p>
-<p>What have we done? First, we have created a model workflow, with workflow(), using a recipe for pre-processing and a model type, logistic_reg(). Second, we fine tuned the parameters of our model. In this case, we only fine tuned the penalty parameter.</p>
+<p>I believe that the tune_grid() function is the only place in our modelling workflow where parallel processing is being used. All the other tasks are single core processing.</p>
+<p>What have we done? First, we have created a model workflow, with workflow(), using a recipe for pre-processing and a model type, logistic_reg(). Second, we fine-tuned the parameters of our model. In this case, we only fine-tuned the penalty parameter.</p>
 </div>
-<div id="analyis-of-results" class="section level2">
-<h2>Analyis of results</h2>
+<div id="analysis-of-results" class="section level2">
+<h2>Analysis of results</h2>
 <pre class="r"><code># we collect the results of our sample to see what penalty value we will pick. 
 metrics &lt;- tune_lasso %&gt;% collect_metrics()
 
@@ -1645,8 +1645,8 @@ prediction_lasso_base %&gt;% select(id, target) %&gt;% write_csv(path = &quot;~/
 <p>In this new model, we will do some feature engineering at a basic level and see if that helps to increase the model performance and especially its accuracy. We continue to use the same lasso model. That means everything has to be converted back to numerical variables.</p>
 <p>We create another version of the basic df.
 Here are the feature engineering steps we will take:</p>
-<div id="rebulding-the-data-frame-and-variables" class="section level2">
-<h2>Rebulding the data frame and variables</h2>
+<div id="rebuilding-the-data-frame-and-variables" class="section level2">
+<h2>Rebuilding the data frame and variables</h2>
 <p>In the following step, there were a lots of trials and errors in regards of the order with which we were performing the changes on the tweets.</p>
 <p>We add the following variables:</p>
 <ul>
@@ -1665,13 +1665,13 @@ Here are the feature engineering steps we will take:</p>
 <ul>
 <li>remove all digits (although I am suspecting that 4 digits date like 2015 or 2017 could have an influence)</li>
 <li>remove all mentions (who is being mentioned might add little value, we have a variable if someone is mentioned)</li>
-<li>remove all http links. The link itself is not discriminatary (does not add any information). We just recorded at the previous step if we have a link, so we can delete it</li>
+<li>remove all http links. The link itself is not discriminatory (does not add any information). We just recorded at the previous step if we have a link, so we can delete it</li>
 <li>lemmatize all words</li>
 <li>remove all non latin letters<br />
 </li>
 <li>count if there are multiple repeated characters in a row (like omggggg). My thinking is that real emergency tweets might use less of these.</li>
 </ul>
-<p>Because of all the cleaning, better make it a function that we can apply to both training and laster on testing set.</p>
+<p>Because of all the cleaning, better make it a function that we can apply to both training and later on testing set.</p>
 <pre class="r"><code>clean_tweets &lt;- function(file_path){
   df &lt;- read_csv(file_path) %&gt;% as_tibble()  %&gt;% 
     mutate(number_hashtag = str_count(string = text, pattern = &quot;#&quot;), 
@@ -2610,9 +2610,9 @@ binary
 </tbody>
 </table>
 <p>Note1: the transformed df after the recipes steps is 7613 x 1237, that is with 1750 maxtokens and pca on 95% variance. Also we only do PCA on the words (not the extra variable) accuracy = 79.8 and f1 = 74.6.</p>
-<p>Note2: And with 2000 maxtokens, 95% threshold on pca, no nomralization we got 79.8% accuracy and f1 = 74.9. df is 7613 x 1369.</p>
-<p>Note3: And with 1750 maxtokens, no pca, we got 79.9% accuracy ad f1 = 74.2.</p>
-<p>Note4: And with 2500 maxtokens, 95% threshold on pca, no nomralization we got 80.0% accuracy and f1 = 74.98. df is 7613 x 1630. And we get the exact same results if we use normalization.</p>
+<p>Note2: And with 2000 maxtokens, 95% threshold on pca, no normalization we got accuracy = 79.8% and f1 = 74.9%. df is 7613 x 1369.</p>
+<p>Note3: And with 1750 maxtokens, no pca, we got accuracy = 79.9% ad f1 = 74.2%.</p>
+<p>Note4: And with 2500 maxtokens, 95% threshold on pca, no normalization we got accuracy = 80.0% and f1 = 74.98%. df is 7613 x 1630. And we get the exact same results if we use normalization.</p>
 <p>All this fine tuning gave us a very small increase in both accuracy and F1 scores. There is also an increase in ROC-AUC. Considering these are the performances on the trained data, and considering the leakage due to normalization, pca and tf-idf, these might be optimist results. Let’s see.</p>
 <pre class="r"><code>best_metric &lt;- tune_lasso %&gt;% select_best(&quot;f_meas&quot;)
 
@@ -2724,7 +2724,7 @@ rm(list = ls())</code></pre>
 <p>Any feedback/advises on the 2 things above are really welcome ;-)</p>
 <p>Lessons learned:</p>
 <ul>
-<li>the easiest model in the second lasso was the best. All the other fanciers, more computationally intensed attempts didn’t provide better results.</li>
+<li>the easiest model in the second lasso was the best. All the other fanciers, more computationally intense attempts didn’t provide better results.</li>
 <li>normalization has been recommended on Lasso models. In our case, normalizing after the tf_idf step or after the pca didn’t change much to our model. So in regards to being parsimonious, I would say I can skip these steps in the future.</li>
 </ul>
 </div>
@@ -2772,7 +2772,7 @@ rm(list = ls())</code></pre>
       
       
       <li>
-        <a href="https://twitter.com/intent/tweet?url=https://fderyckel.github.io/post/disaster-tweets-part-i/&amp;text=Disaster%20Tweets%20-%20Part%20I" target="_blank" rel="noopener" class="share-btn-twitter">
+        <a href="https://twitter.com/intent/tweet?url=/post/disaster-tweets-part-i/&amp;text=Disaster%20Tweets%20-%20Part%20I" target="_blank" rel="noopener" class="share-btn-twitter">
           <i class="fab fa-twitter"></i>
         </a>
       </li>
@@ -2785,7 +2785,7 @@ rm(list = ls())</code></pre>
       
       
       <li>
-        <a href="https://www.facebook.com/sharer.php?u=https://fderyckel.github.io/post/disaster-tweets-part-i/&amp;t=Disaster%20Tweets%20-%20Part%20I" target="_blank" rel="noopener" class="share-btn-facebook">
+        <a href="https://www.facebook.com/sharer.php?u=/post/disaster-tweets-part-i/&amp;t=Disaster%20Tweets%20-%20Part%20I" target="_blank" rel="noopener" class="share-btn-facebook">
           <i class="fab fa-facebook"></i>
         </a>
       </li>
@@ -2798,7 +2798,7 @@ rm(list = ls())</code></pre>
       
       
       <li>
-        <a href="mailto:?subject=Disaster%20Tweets%20-%20Part%20I&amp;body=https://fderyckel.github.io/post/disaster-tweets-part-i/" target="_blank" rel="noopener" class="share-btn-email">
+        <a href="mailto:?subject=Disaster%20Tweets%20-%20Part%20I&amp;body=/post/disaster-tweets-part-i/" target="_blank" rel="noopener" class="share-btn-email">
           <i class="fas fa-envelope"></i>
         </a>
       </li>
@@ -2811,7 +2811,7 @@ rm(list = ls())</code></pre>
       
       
       <li>
-        <a href="https://www.linkedin.com/shareArticle?url=https://fderyckel.github.io/post/disaster-tweets-part-i/&amp;title=Disaster%20Tweets%20-%20Part%20I" target="_blank" rel="noopener" class="share-btn-linkedin">
+        <a href="https://www.linkedin.com/shareArticle?url=/post/disaster-tweets-part-i/&amp;title=Disaster%20Tweets%20-%20Part%20I" target="_blank" rel="noopener" class="share-btn-linkedin">
           <i class="fab fa-linkedin-in"></i>
         </a>
       </li>
@@ -2824,7 +2824,7 @@ rm(list = ls())</code></pre>
       
       
       <li>
-        <a href="whatsapp://send?text=Disaster%20Tweets%20-%20Part%20I%20https://fderyckel.github.io/post/disaster-tweets-part-i/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+        <a href="whatsapp://send?text=Disaster%20Tweets%20-%20Part%20I%20/post/disaster-tweets-part-i/" target="_blank" rel="noopener" class="share-btn-whatsapp">
           <i class="fab fa-whatsapp"></i>
         </a>
       </li>
@@ -2837,7 +2837,7 @@ rm(list = ls())</code></pre>
       
       
       <li>
-        <a href="https://service.weibo.com/share/share.php?url=https://fderyckel.github.io/post/disaster-tweets-part-i/&amp;title=Disaster%20Tweets%20-%20Part%20I" target="_blank" rel="noopener" class="share-btn-weibo">
+        <a href="https://service.weibo.com/share/share.php?url=/post/disaster-tweets-part-i/&amp;title=Disaster%20Tweets%20-%20Part%20I" target="_blank" rel="noopener" class="share-btn-weibo">
           <i class="fab fa-weibo"></i>
         </a>
       </li>
@@ -2878,7 +2878,7 @@ rm(list = ls())</code></pre>
       
 
       <div class="media-body">
-        <h5 class="card-title"><a href="https://fderyckel.github.io/">François de Ryckel</a></h5>
+        <h5 class="card-title"><a href="/">François de Ryckel</a></h5>
         <h6 class="card-subtitle">Teacher, Farmer, Educational Data Analyst</h6>
         <p class="card-text">A travelling educator with a strong interest in farming, finance and modeling.</p>
         <ul class="network-icon" aria-hidden="true">
@@ -3121,6 +3121,16 @@ rm(list = ls())</code></pre>
   
   <div class="container">
     <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
   
 
   <p class="powered-by">
