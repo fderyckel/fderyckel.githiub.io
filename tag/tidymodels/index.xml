@@ -2,23 +2,37 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tidymodels | François de Ryckel</title>
-    <link>https://fderyckel.github.io/tag/tidymodels/</link>
-      <atom:link href="https://fderyckel.github.io/tag/tidymodels/index.xml" rel="self" type="application/rss+xml" />
+    <link>/tag/tidymodels/</link>
+      <atom:link href="/tag/tidymodels/index.xml" rel="self" type="application/rss+xml" />
     <description>tidymodels</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 26 May 2020 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>tidymodels</title>
-      <link>https://fderyckel.github.io/tag/tidymodels/</link>
+      <link>/tag/tidymodels/</link>
     </image>
     
     <item>
       <title>Disaster Tweets - Part II</title>
-      <link>https://fderyckel.github.io/post/</link>
+      <link>/post/</link>
       <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
-      <guid>https://fderyckel.github.io/post/</guid>
+      <guid>/post/</guid>
       <description>
 
+&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#setting-up&#34;&gt;Setting up&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#finding-the-svd-matrix&#34;&gt;Finding the SVD matrix&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#svd-with-lasso&#34;&gt;SVD with Lasso&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#analysis-of-grid-results&#34;&gt;Analysis of grid results&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#make-predictions&#34;&gt;Make predictions&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#svd-with-xgboost&#34;&gt;SVD with Xgboost&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#variable-importance&#34;&gt;variable importance&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#submission-of-results&#34;&gt;Submission of results&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
 
 &lt;p&gt;In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix. Hence this is still very much a BOW approach. This approach combined with xgboost gave us the best results without using word-embedding (or word-vectors) techniques. That said, we are not sure how this approach would work in production as it seems we would have to constantly regenerate the dense matrix (which is quite computationally intense). We would love to see / hear from others on how to use svd in this type of task.&lt;/p&gt;
 &lt;p&gt;To use SVD can be seen as dimensionality reduction techniques here. Going from a very wide sparse matrix (as many columns as there are different words in all the tweets), to a less sparse one.&lt;/p&gt;
@@ -261,7 +275,7 @@ metrics %&amp;gt;%
   geom_line() + 
   facet_wrap(~.metric) + 
   scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;make-predictions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Make predictions&lt;/h2&gt;
@@ -374,7 +388,7 @@ write_rds(x = model_xgboost_svd, path = &amp;quot;~/disaster_tweets/data/model_x
 model_xgboost_svd %&amp;gt;% 
   pull_workflow_fit() %&amp;gt;% 
   vip::vip(geom = &amp;quot;point&amp;quot;, num_features=20) #%&amp;gt;% arrange(desc(Importance)) %&amp;gt;% &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;submission-of-results&#34; class=&#34;section level1&#34;&gt;
