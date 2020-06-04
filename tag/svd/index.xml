@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SVD | François de Ryckel</title>
+    <link>https://fderyckel.github.io/tag/svd/</link>
+      <atom:link href="https://fderyckel.github.io/tag/svd/index.xml" rel="self" type="application/rss+xml" />
+    <description>SVD</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 26 May 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>SVD</title>
+      <link>https://fderyckel.github.io/tag/svd/</link>
+    </image>
+    
+    <item>
+      <title>Disaster Tweets - Part II</title>
+      <link>https://fderyckel.github.io/post/</link>
+      <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
+      <guid>https://fderyckel.github.io/post/</guid>
+      <description>
+
+
+&lt;p&gt;In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix. Hence this is still very much a BOW approach. This approach combined with xgboost gave us the best results without using word-embedding (or word-vectors) techniques. That said, we are not sure how this approach would work in production as it seems we would have to constantly regenerate the dense matrix (which is quite computationally intense). We would love to see / hear from others on how to use svd in this type of task.&lt;/p&gt;
+&lt;p&gt;To use SVD can be seen as dimensionality reduction techniques here. Going from a very wide sparse matrix (as many columns as there are different words in all the tweets), to a less sparse one.&lt;/p&gt;
+&lt;p&gt;So let’s first to build that sparse matrix: on the rows, the document number (in this case the tweet ID) on the columns the word (1 word per column)&lt;/p&gt;
+&lt;p&gt;Because the dimensionality reduction is based on the words and their co-occurrence, we need to use the whole dataset for this task. Of course this is not really reasonable in the case of new cases.&lt;/p&gt;
+&lt;p&gt;Also, since we have already developed a whole cleaning workflow, let’s re-use it on the whole df.&lt;/p&gt;
+&lt;div id=&#34;setting-up&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Setting up&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(readr)      # to read and write (import / export) any type into our R console.
+library(dplyr)      # for pretty much all our data wrangling
+library(ggplot2)
+library(stringr)
+library(forcats)
+library(purrr)
+
+library(kableExtra)
+
+library(rsample)    # to use initial_split() and some other resampling techniques later on. 
+library(recipes)      # to use the recipe() and step_() functions
+library(parsnip)      # the main engine that run the models 
+library(workflows)    # to use workflow()
+library(tune)         # to fine tune the hyperparameters 
+library(dials)        # to use grid_regular(), tune_grid(), penalty()
+library(yardstick)    # to create the measure of accuracy, f1 score and ROC-AUC 
+
+library(doParallel)   #to parallelize the work - useful  in tune()
+
+library(tidytext)
+library(textrecipes)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We’ll be reusing the same clean_tweets() function we have used on part I to clean the tweets. We just copy-paste it here and repurpose it.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_train &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/train.csv&amp;quot;) %&amp;gt;% as_tibble() %&amp;gt;% select(id, text, keyword, location) 
+df_test &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/test.csv&amp;quot;) %&amp;gt;% as_tibble() %&amp;gt;% select(id, text, keyword, location)
+df_all &amp;lt;- bind_rows(df_train, df_test)
+
+clean_tweets &amp;lt;- function(df){
+  df &amp;lt;- df  %&amp;gt;% 
+    mutate(number_hashtag = str_count(string = text, pattern = &amp;quot;#&amp;quot;), 
+           number_number = str_count(string = text, pattern = &amp;quot;[0-9]&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_http = str_count(string = text, pattern = &amp;quot;http&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_mention = str_count(string = text, pattern = &amp;quot;@&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_location = if_else(!is.na(location), 1, 0), 
+           number_keyword = if_else(!is.na(keyword), 1, 0), 
+           number_repeated_char = str_count(string = text, pattern = &amp;quot;([a-z])\\1{2}&amp;quot;) %&amp;gt;% as.numeric(),  
+           text = str_replace_all(string = text, pattern = &amp;quot;http[^[:space:]]*&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           text = str_replace_all(string = text, pattern = &amp;quot;@[^[:space:]]*&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           number_char = nchar(text),   #add the length of the tweet in character. 
+           number_word = str_count(string = text, pattern = &amp;quot;\\w+&amp;quot;), 
+           text = str_replace_all(string = text, pattern = &amp;quot;[0-9]&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           text = map(text, textstem::lemmatize_strings) %&amp;gt;% unlist(.), 
+           text = map(text, function(.x) stringi::stri_trans_general(.x, &amp;quot;Latin-ASCII&amp;quot;)) %&amp;gt;% unlist(.), 
+           text = str_replace_all(string = text, pattern  = &amp;quot;\u0089&amp;quot;, replacement = &amp;quot;&amp;quot;)) %&amp;gt;% 
+  select(-keyword, -location) 
+  return(df)
+}
+
+df_all &amp;lt;- clean_tweets(df_all)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;finding-the-svd-matrix&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Finding the SVD matrix&lt;/h1&gt;
+&lt;p&gt;Let’s now works on our sparse matrix with the bind_tf_idf() functions. First, we’ll need to tokenize the tweets and remove stop-words. To be able to use the tf_idf, we’ll also need to count the occurrence of each word in each tweet.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_all_tok &amp;lt;- df_all %&amp;gt;% 
+  unnest_tokens(word, text) %&amp;gt;% anti_join(stop_words %&amp;gt;% filter(lexicon == &amp;quot;snowball&amp;quot;)) %&amp;gt;% 
+  mutate(word_stem = textstem::stem_words(word)) %&amp;gt;% count(id, word_stem)
+
+df_all_tf_idf &amp;lt;- df_all_tok %&amp;gt;% bind_tf_idf(term = word_stem, document = id, n = n)
+
+# turning the tf_idf into a matrix. 
+dtm_df_all &amp;lt;- cast_dtm(term = word_stem, document = id, value = tf_idf, data = df_all_tf_idf)
+mat_df_all &amp;lt;- as.matrix(dtm_df_all)
+dim(mat_df_all)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 10873 13802&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;length(unique(df_all$id)) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 10876&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# I have a problem! Some tweets have not made it to our matrix.  
+# That&amp;#39;s probably because there were just a link, or just a number or just stop words.  
+# which one are those links.   This is also why I have hanged the corpus of stop-words. 
+# so 3 tweets have not made it at all if we consider both training and testing set. &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s have a look at our sparse matrix to better understand what’s going on.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mat_df_all[1:10, 1:20]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##     Terms
+## Docs       car     crash    happen      just  terribl     allah     deed
+##    0 0.8580183 0.7837519 0.9588457 0.6432791 1.330996 0.0000000 0.000000
+##    1 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.9851632 1.228699
+##    2 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.0000000 0.000000
+##    3 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.0000000 0.000000
+##    4 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.0000000 0.000000
+##    5 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.0000000 0.000000
+##    6 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.0000000 0.000000
+##    7 0.0000000 0.0000000 0.0000000 0.3216396 0.000000 0.0000000 0.000000
+##    8 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.0000000 0.000000
+##    9 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.0000000 0.000000
+##     Terms
+## Docs earthquak    forgiv       mai    reason         u      citi   differ
+##    0 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.000000
+##    1 0.7270493 0.9851632 0.6197444 0.7839108 0.4343156 0.0000000 0.000000
+##    2 0.7270493 0.0000000 0.0000000 0.0000000 0.0000000 0.6864859 0.873712
+##    3 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.000000
+##    4 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.000000
+##    5 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.000000
+##    6 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.000000
+##    7 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.000000
+##    8 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.000000
+##    9 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.0000000 0.000000
+##     Terms
+## Docs   everyon      hear     safe      stai    across      fire
+##    0 0.0000000 0.0000000 0.000000 0.0000000 0.0000000 0.0000000
+##    1 0.0000000 0.0000000 0.000000 0.0000000 0.0000000 0.0000000
+##    2 0.7207918 0.6628682 0.873712 0.7776986 0.0000000 0.0000000
+##    3 0.0000000 0.0000000 0.000000 0.0000000 0.6664668 0.3448581
+##    4 0.0000000 0.0000000 0.000000 0.0000000 0.0000000 0.4433889
+##    5 0.0000000 0.0000000 0.000000 0.0000000 0.0000000 0.0000000
+##    6 0.0000000 0.0000000 0.000000 0.0000000 0.0000000 0.0000000
+##    7 0.0000000 0.0000000 0.000000 0.0000000 0.0000000 0.0000000
+##    8 0.0000000 0.0000000 0.000000 0.0000000 0.0000000 0.2586435
+##    9 0.0000000 0.0000000 0.000000 0.0000000 0.0000000 0.0000000&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The values in the matrix are not the frequency but their tf_idf.&lt;/p&gt;
+&lt;p&gt;Let’s now fix the issues of the missing tweets or we will have some issues later on during the modeling workflow. We see that the matrix is ordered by ID&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Let&amp;#39;s identify which tweets didn&amp;#39;t make it into our df3 and save them. 
+df_mat_rowname &amp;lt;- tibble(id = as.numeric(rownames(mat_df_all)))
+df_rowname &amp;lt;- tibble(id = df_all$id)
+missing_id &amp;lt;- df_rowname %&amp;gt;% anti_join(df_mat_rowname)
+
+# Let&amp;#39;s add empty rows with the right id as rowname to our matrix. 
+yo &amp;lt;- matrix(0.0, nrow = nrow(missing_id), ncol = ncol(mat_df_all))
+rownames(yo) &amp;lt;- missing_id$id
+
+mat_df &amp;lt;- rbind(mat_df_all, yo)
+dim(mat_df)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 10876 13802&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#mat_df3[7601:7613, 11290:11302]
+
+### trying to keep track of the order of the matrix
+mat_df_id &amp;lt;- rownames(mat_df)
+head(mat_df_id, 20)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1] &amp;quot;0&amp;quot;  &amp;quot;1&amp;quot;  &amp;quot;2&amp;quot;  &amp;quot;3&amp;quot;  &amp;quot;4&amp;quot;  &amp;quot;5&amp;quot;  &amp;quot;6&amp;quot;  &amp;quot;7&amp;quot;  &amp;quot;8&amp;quot;  &amp;quot;9&amp;quot;  &amp;quot;10&amp;quot; &amp;quot;11&amp;quot; &amp;quot;12&amp;quot; &amp;quot;13&amp;quot; &amp;quot;14&amp;quot;
+## [16] &amp;quot;15&amp;quot; &amp;quot;16&amp;quot; &amp;quot;17&amp;quot; &amp;quot;18&amp;quot; &amp;quot;19&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tail(mat_df_id, 20)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1] &amp;quot;10859&amp;quot; &amp;quot;10860&amp;quot; &amp;quot;10861&amp;quot; &amp;quot;10862&amp;quot; &amp;quot;10863&amp;quot; &amp;quot;10864&amp;quot; &amp;quot;10865&amp;quot; &amp;quot;10866&amp;quot; &amp;quot;10867&amp;quot;
+## [10] &amp;quot;10868&amp;quot; &amp;quot;10869&amp;quot; &amp;quot;10870&amp;quot; &amp;quot;10871&amp;quot; &amp;quot;10872&amp;quot; &amp;quot;10873&amp;quot; &amp;quot;10874&amp;quot; &amp;quot;10875&amp;quot; &amp;quot;6394&amp;quot; 
+## [19] &amp;quot;9697&amp;quot;  &amp;quot;43&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that we solved that issue of missing rows (which took almost a all day to figure out), we can move to finding the dense matrix. We will use the &lt;strong&gt;irlba&lt;/strong&gt; library to help with the decomposition.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;incomplete.cases &amp;lt;- which(!complete.cases(mat_df))
+mat_df[incomplete.cases,] &amp;lt;- rep(0.0, ncol(mat_df))
+dim(mat_df) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 10876 13802&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;svd_mat &amp;lt;- irlba::irlba(t(mat_df), nv = 750, maxit = 2000)
+write_rds(x = svd_mat, path = &amp;quot;~/disaster_tweets/data/svd.rds&amp;quot;)
+
+# And then to save it the whole df with ID + svd
+svd_mat &amp;lt;- read_rds(&amp;quot;~/disaster_tweets/data/svd.rds&amp;quot;)
+yo &amp;lt;- as_tibble(svd_mat$v)
+dim(yo)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 10876   750&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df4 &amp;lt;- bind_cols(id = as.numeric(mat_df_id), yo)
+write_rds(x = df4, path = &amp;quot;~/disaster_tweets/data/svd_df_all750.rds&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It is worth mentioning that singular value decomposition didn’t parallelized on my machine and took like 3hrs to get the matrix. That’s why we have saved it for further used.&lt;/p&gt;
+&lt;p&gt;Now that we have our dense matrix, we can start to fit back all the pieces together for our modelling process.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_train &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/train.csv&amp;quot;) %&amp;gt;% clean_tweets()
+
+# sorting out the same tweets, different target issues 
+temp &amp;lt;- df_train %&amp;gt;% group_by(text) %&amp;gt;% 
+  mutate(mean_target = mean(target), 
+         new_target = if_else(mean_target &amp;gt; 0.5, 1, 0)) %&amp;gt;% ungroup() %&amp;gt;% 
+  mutate(target = new_target, 
+         target_bin = factor(if_else(target == 1, &amp;quot;a_truth&amp;quot;, &amp;quot;b_false&amp;quot;))) %&amp;gt;% 
+  select(-new_target, -mean_target, -target)
+
+
+df_svd &amp;lt;- read_rds(&amp;quot;~/disaster_tweets/data/svd_df_all750.rds&amp;quot;)
+
+df_train &amp;lt;- left_join(temp, df_svd, by = &amp;quot;id&amp;quot;) %&amp;gt;% 
+  select(-text)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;svd-with-lasso&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;SVD with Lasso&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(0109)
+rsplit_df &amp;lt;- initial_split(df_train, strata = target_bin, prop = 0.85)
+df_train_tr &amp;lt;- training(rsplit_df)
+df_train_te &amp;lt;- testing(rsplit_df)
+
+# reusing the same df_train, df_train_tr, df_train_te from before.  
+recipe_tweet &amp;lt;- recipe(formula = target_bin ~ ., data = df_train_tr) %&amp;gt;% 
+  update_role(id, new_role = &amp;quot;ID&amp;quot;) %&amp;gt;% 
+  step_zv(all_numeric(), -all_outcomes()) %&amp;gt;% 
+  step_normalize(all_numeric())
+
+# we &amp;#39;ll assign 40 different values for our penalty. 
+# we noticed earlier that best values are between penalties 0.001 and 0.005
+grid_lambda &amp;lt;- expand.grid(penalty = seq(0.0014,0.005, length = 45)) 
+
+# This time we&amp;#39;ll use 10 folds cross-validation
+set.seed(0109)
+folds_training &amp;lt;- vfold_cv(df_train, v = 10, repeats = 1) 
+
+model_lasso &amp;lt;- logistic_reg(mode = &amp;quot;classification&amp;quot;, 
+                            penalty = tune(), mixture = 1) %&amp;gt;% 
+  set_engine(&amp;quot;glmnet&amp;quot;) 
+
+# starting our worflow
+wf_lasso &amp;lt;- workflow() %&amp;gt;% 
+  add_recipe(recipe_tweet) %&amp;gt;% 
+  add_model(model_lasso) 
+
+library(doParallel)
+registerDoParallel(cores = 64)
+
+# run a lasso regression with cross-validation, on 40 different levels of penalty
+tune_lasso &amp;lt;- tune_grid(
+  wf_lasso, 
+  resamples = folds_training, 
+  grid = grid_lambda, 
+  metrics = metric_set(roc_auc, f_meas, accuracy), 
+  control = control_grid(verbose = TRUE)
+) 
+
+tune_lasso %&amp;gt;% collect_metrics() %&amp;gt;% 
+  write_csv(&amp;quot;~/disaster_tweets/data/metrics_lasso_svd750.csv&amp;quot;)
+
+best_metric &amp;lt;- tune_lasso %&amp;gt;% select_best(&amp;quot;f_meas&amp;quot;)
+
+wf_lasso &amp;lt;- finalize_workflow(wf_lasso, best_metric)
+
+last_fit(wf_lasso, rsplit_df) %&amp;gt;% collect_metrics()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;          &amp;lt;dbl&amp;gt;
+## 1 accuracy binary         0.798
+## 2 roc_auc  binary         0.860&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#save the final lasso model
+model_lasso_svd &amp;lt;- fit(wf_lasso, df_train)
+write_rds(x = model_lasso_svd, path = &amp;quot;~/disaster_tweets/data/model_lasso_svd750.rds&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note 1 Lasso: svd with 1000L, normalize all, penalty 0.001681, scores: f1=73.99, acc =79.3, roc=85.4&lt;/p&gt;
+&lt;div id=&#34;analysis-of-grid-results&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Analysis of grid results&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# we read the results of our sample to see the penalty values and their performances. 
+metrics &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/metrics_lasso_svd750.csv&amp;quot;) 
+
+metrics %&amp;gt;% 
+  ggplot(aes(x = penalty, y = mean, color = .metric)) + 
+  geom_line() + 
+  facet_wrap(~.metric) + 
+  scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;make-predictions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Make predictions&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_test &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/test.csv&amp;quot;)  %&amp;gt;% clean_tweets()
+df_svd &amp;lt;- read_rds(&amp;quot;~/disaster_tweets/data/svd_df_all750.rds&amp;quot;)
+df_test &amp;lt;- left_join(df_test, df_svd, by = &amp;quot;id&amp;quot;) 
+
+library(glmnet)
+prediction_lasso_svd &amp;lt;- tibble(id = df_test$id, 
+                               target = if_else(predict(model_lasso_svd, new_data = df_test) == &amp;quot;a_truth&amp;quot;, 1, 0))
+
+prediction_lasso_svd %&amp;gt;% write_csv(path = &amp;quot;~/disaster_tweets/data/prediction_svd_lasso750.csv&amp;quot;)
+
+# clean everything 
+rm(list =  ls())&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;svd-with-xgboost&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;SVD with Xgboost&lt;/h1&gt;
+&lt;p&gt;We can use the same idea with xgboost.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;clean_tweets &amp;lt;- function(df){
+  df &amp;lt;- df  %&amp;gt;% 
+    mutate(number_hashtag = str_count(string = text, pattern = &amp;quot;#&amp;quot;), 
+           number_number = str_count(string = text, pattern = &amp;quot;[0-9]&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_http = str_count(string = text, pattern = &amp;quot;http&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_mention = str_count(string = text, pattern = &amp;quot;@&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_location = if_else(!is.na(location), 1, 0), 
+           number_keyword = if_else(!is.na(keyword), 1, 0), 
+           number_repeated_char = str_count(string = text, pattern = &amp;quot;([a-z])\\1{2}&amp;quot;) %&amp;gt;% as.numeric(),  
+           text = str_replace_all(string = text, pattern = &amp;quot;http[^[:space:]]*&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           text = str_replace_all(string = text, pattern = &amp;quot;@[^[:space:]]*&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           number_char = nchar(text),   #add the length of the tweet in character. 
+           number_word = str_count(string = text, pattern = &amp;quot;\\w+&amp;quot;), 
+           text = str_replace_all(string = text, pattern = &amp;quot;[0-9]&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           text = map(text, textstem::lemmatize_strings) %&amp;gt;% unlist(.), 
+           text = map(text, function(.x) stringi::stri_trans_general(.x, &amp;quot;Latin-ASCII&amp;quot;)) %&amp;gt;% unlist(.), 
+           text = str_replace_all(string = text, pattern  = &amp;quot;\u0089&amp;quot;, replacement = &amp;quot;&amp;quot;)) %&amp;gt;% 
+  select(-keyword, -location) 
+  return(df)
+}
+
+df_train &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/train.csv&amp;quot;) %&amp;gt;% clean_tweets()
+
+# sorting out the same tweets, different target issues 
+temp &amp;lt;- df_train %&amp;gt;% group_by(text) %&amp;gt;% 
+  mutate(mean_target = mean(target), 
+         new_target = if_else(mean_target &amp;gt; 0.5, 1, 0)) %&amp;gt;% ungroup() %&amp;gt;% 
+  mutate(target = new_target, 
+         target_bin = factor(if_else(target == 1, &amp;quot;a_truth&amp;quot;, &amp;quot;b_false&amp;quot;))) %&amp;gt;% 
+  select(-new_target, -mean_target, -target)
+
+
+df_svd &amp;lt;- read_rds(&amp;quot;~/disaster_tweets/data/svd_df_all750.rds&amp;quot;)
+
+df_train &amp;lt;- left_join(temp, df_svd, by = &amp;quot;id&amp;quot;) %&amp;gt;% 
+  select(-text)
+
+recipe_tweet &amp;lt;- recipe(formula = target_bin ~ ., data = df_train) %&amp;gt;% 
+  update_role(id, new_role = &amp;quot;ID&amp;quot;)
+
+# xgboost classification, tuning on trees, tree-depth  and mtry
+model_xgboost &amp;lt;- boost_tree(mode = &amp;quot;classification&amp;quot;, trees = tune(), 
+                            learn_rate = 0.01, tree_depth = tune(), mtry = tune()) %&amp;gt;% 
+  set_engine(&amp;quot;xgboost&amp;quot;, nthread = 64)
+
+# starting our workflow
+wf_xgboost &amp;lt;- workflow() %&amp;gt;% 
+  add_recipe(recipe_tweet) %&amp;gt;% 
+  add_model(model_xgboost)
+
+# This time we use 5 folds cross-validation.  
+#  xgboost is extremely resource intensive on wide df. 
+set.seed(0109)
+folds_training &amp;lt;- vfold_cv(df_train, v = 5, repeats = 1)
+grid_xgboost &amp;lt;- expand.grid(trees = c(2000), 
+                            tree_depth = c(5, 6), 
+                            mtry = c(150, 300))
+
+library(doParallel)
+registerDoParallel(cores = 64)
+
+# run a xgboost classification with cross-validation
+tune_xgboost &amp;lt;- tune_grid(
+  wf_xgboost, 
+  resamples = folds_training, 
+  grid = grid_xgboost, 
+  metrics = metric_set(roc_auc, f_meas, accuracy), 
+  control = control_grid(verbose = TRUE, save_pred = TRUE)
+)
+
+tune_xgboost %&amp;gt;% collect_metrics() %&amp;gt;% 
+  write_csv(&amp;quot;~/disaster_tweets/data/metrics_xgboost_svd750.csv&amp;quot;)
+
+best_metric &amp;lt;- tune_xgboost %&amp;gt;% select_best(&amp;quot;f_meas&amp;quot;)
+
+wf_xgboost &amp;lt;- finalize_workflow(wf_xgboost, best_metric)
+
+last_fit(wf_xgboost, rsplit_df) %&amp;gt;% collect_metrics()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2 x 3
+##   .metric  .estimator .estimate
+##   &amp;lt;chr&amp;gt;    &amp;lt;chr&amp;gt;          &amp;lt;dbl&amp;gt;
+## 1 accuracy binary         0.825
+## 2 roc_auc  binary         0.883&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#save the final lasso model
+model_xgboost_svd &amp;lt;- fit(wf_xgboost, df_train)
+write_rds(x = model_xgboost_svd, path = &amp;quot;~/disaster_tweets/data/model_xgboost_svd750.rds&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;variable-importance&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;variable importance&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(vip)
+model_xgboost_svd %&amp;gt;% 
+  pull_workflow_fit() %&amp;gt;% 
+  vip::vip(geom = &amp;quot;point&amp;quot;, num_features=20) #%&amp;gt;% arrange(desc(Importance)) %&amp;gt;% &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;submission-of-results&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Submission of results&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_test &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/test.csv&amp;quot;)  %&amp;gt;% clean_tweets()
+df_svd &amp;lt;- read_rds(&amp;quot;~/disaster_tweets/data/svd_df_all750.rds&amp;quot;)
+df_test &amp;lt;- left_join(df_test, df_svd, by = &amp;quot;id&amp;quot;) 
+
+library(xgboost)
+prediction_xgboost_svd &amp;lt;- tibble(id = df_test$id, 
+                                 target = if_else(predict(model_xgboost_svd, new_data = df_test) == &amp;quot;a_truth&amp;quot;, 1, 0))
+
+prediction_xgboost_svd %&amp;gt;% write_csv(path = &amp;quot;~/disaster_tweets/data/prediction_svd_xgboost750.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note 1: majority voting, svd with 850 wide, using lasso, got 77% public score.
+Note 2: majority voting, svd 1000 wide, using
+Note 3: majority voting, svd with 1000 wide, using lasso, got % public score.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
