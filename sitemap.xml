@@ -18,12 +18,17 @@
   </url>
   
   <url>
+    <loc>https://fderyckel.github.io/categories/</loc>
+    <lastmod>2020-06-05T16:04:58+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://fderyckel.github.io/tag/classification/</loc>
     <lastmod>2020-06-05T16:04:58+02:00</lastmod>
   </url>
   
   <url>
-    <loc>https://fderyckel.github.io/post/</loc>
+    <loc>https://fderyckel.github.io/post/disaster-tweets-part-ii/</loc>
     <lastmod>2020-06-05T16:04:58+02:00</lastmod>
   </url>
   
@@ -43,6 +48,11 @@
   </url>
   
   <url>
+    <loc>https://fderyckel.github.io/category/r/</loc>
+    <lastmod>2020-06-05T16:04:58+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://fderyckel.github.io/tag/svd/</loc>
     <lastmod>2020-06-05T16:04:58+02:00</lastmod>
   </url>
@@ -58,11 +68,6 @@
   </url>
   
   <url>
-    <loc>https://fderyckel.github.io/categories/</loc>
-    <lastmod>2020-05-25T21:35:08+02:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://fderyckel.github.io/post/disaster-tweets-part-i/</loc>
     <lastmod>2020-05-25T21:35:08+02:00</lastmod>
   </url>
@@ -74,11 +79,6 @@
   
   <url>
     <loc>https://fderyckel.github.io/tag/nlp/</loc>
-    <lastmod>2020-05-25T21:35:08+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://fderyckel.github.io/category/r/</loc>
     <lastmod>2020-05-25T21:35:08+02:00</lastmod>
   </url>
   
