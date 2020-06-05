@@ -27,7 +27,7 @@
   
     
   
-  <meta name="description" content="Setting up Finding the SVD matrix SVD with Lasso Analysis of grid results Make predictions  SVD with Xgboost variable importance  Submission of results References   In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix.">
+  <meta name="description" content="In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix.">
 
   
   <link rel="alternate" hreflang="en-us" href="https://fderyckel.github.io/post/disaster-tweets-part-ii/">
@@ -237,7 +237,7 @@
   <meta property="og:site_name" content="François de Ryckel">
   <meta property="og:url" content="https://fderyckel.github.io/post/disaster-tweets-part-ii/">
   <meta property="og:title" content="Disaster Tweets - Part II | François de Ryckel">
-  <meta property="og:description" content="Setting up Finding the SVD matrix SVD with Lasso Analysis of grid results Make predictions  SVD with Xgboost variable importance  Submission of results References   In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix."><meta property="og:image" content="https://fderyckel.github.io/post/disaster-tweets-part-ii/featured.jpg">
+  <meta property="og:description" content="In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix."><meta property="og:image" content="https://fderyckel.github.io/post/disaster-tweets-part-ii/featured.jpg">
   <meta property="twitter:image" content="https://fderyckel.github.io/post/disaster-tweets-part-ii/featured.jpg"><meta property="og:locale" content="en-us">
   
     
@@ -291,7 +291,7 @@
       "url": "https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
     }
   },
-  "description": "Setting up Finding the SVD matrix SVD with Lasso Analysis of grid results Make predictions  SVD with Xgboost variable importance  Submission of results References   In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix."
+  "description": "In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix."
 }
 </script>
 
@@ -703,21 +703,6 @@
     <div class="article-style">
       
 
-<div id="TOC">
-<ul>
-<li><a href="#setting-up">Setting up</a></li>
-<li><a href="#finding-the-svd-matrix">Finding the SVD matrix</a></li>
-<li><a href="#svd-with-lasso">SVD with Lasso</a><ul>
-<li><a href="#analysis-of-grid-results">Analysis of grid results</a></li>
-<li><a href="#make-predictions">Make predictions</a></li>
-</ul></li>
-<li><a href="#svd-with-xgboost">SVD with Xgboost</a><ul>
-<li><a href="#variable-importance">variable importance</a></li>
-</ul></li>
-<li><a href="#submission-of-results">Submission of results</a></li>
-<li><a href="#references">References</a></li>
-</ul>
-</div>
 
 <p>In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix. Hence this is still very much a BOW approach. This approach combined with xgboost gave us the best results without using word-embedding (or word-vectors) techniques. That said, we are not sure how this approach would work in production as it seems we would have to constantly regenerate the dense matrix (which is quite computationally intense). We would love to see / hear from others on how to use svd in this type of task.</p>
 <p>In a sense, SVD can be seen as a dimensionality reduction technique:going from a very wide sparse matrix (as many columns as there are different words in all the tweets), to a dense one.</p>

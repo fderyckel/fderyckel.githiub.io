@@ -27,10 +27,10 @@
   
     
   
-  <meta name="description" content="Teacher, Farmer, Educational Data Analyst">
+  <meta name="description" content="">
 
   
-  <link rel="alternate" hreflang="en-us" href="https://fderyckel.github.io/category/r/">
+  <link rel="alternate" hreflang="en-us" href="https://fderyckel.github.io/post/disaster-tweets-visuals/">
 
   
 
@@ -212,14 +212,12 @@
   
 
   
-  <link rel="alternate" href="/category/r/index.xml" type="application/rss+xml" title="François de Ryckel">
-  
 
   <link rel="manifest" href="/index.webmanifest">
   <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
   <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="https://fderyckel.github.io/category/r/">
+  <link rel="canonical" href="https://fderyckel.github.io/post/disaster-tweets-visuals/">
 
   
   
@@ -238,18 +236,63 @@
   <meta property="twitter:creator" content="@Read_The_Dung">
   
   <meta property="og:site_name" content="François de Ryckel">
-  <meta property="og:url" content="https://fderyckel.github.io/category/r/">
-  <meta property="og:title" content="R | François de Ryckel">
-  <meta property="og:description" content="Teacher, Farmer, Educational Data Analyst"><meta property="og:image" content="https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png">
+  <meta property="og:url" content="https://fderyckel.github.io/post/disaster-tweets-visuals/">
+  <meta property="og:title" content="disaster_tweets_visuals | François de Ryckel">
+  <meta property="og:description" content=""><meta property="og:image" content="https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png">
   <meta property="twitter:image" content="https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-05-26T00:00:00&#43;00:00">
+    
+      <meta property="article:published_time" content="2020-06-05T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-06-05T10:36:14&#43;03:00">
   
 
   
 
 
+    
 
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://fderyckel.github.io/post/disaster-tweets-visuals/"
+  },
+  "headline": "disaster_tweets_visuals",
+  
+  "datePublished": "2020-06-05T00:00:00Z",
+  "dateModified": "2020-06-05T10:36:14+03:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "François de Ryckel"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "François de Ryckel",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": ""
+}
+</script>
+
+  
 
   
 
@@ -257,10 +300,13 @@
   
 
 
+  
 
 
 
-  <title>R | François de Ryckel</title>
+
+
+  <title>disaster_tweets_visuals | François de Ryckel</title>
 
 </head>
 
@@ -543,81 +589,353 @@
 </nav>
 
 
-  
-
-
-
-
-
-
-
-
-
-
-
+  <article class="article">
 
   
 
+
+
+
+
+
+
+
+
+
+
+
+  
+
   
   
+  
+<div class="article-container pt-3">
+  <h1>disaster_tweets_visuals</h1>
+
+  
+
   
     
-  
-<div class="universal-wrapper pt-3">
-  <h1>R</h1>
+
+
+<div class="article-metadata">
 
   
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    Fri, 05 Jun 2020	
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    0 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <a href="/post/disaster-tweets-visuals/#disqus_thread"></a>
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
 </div>
 
 
 
-<div class="universal-wrapper">
-  
+  <div class="article-container">
 
-  
-  
-    
-    
-    
-    <div>
-      <h2><a href="/post/disaster-tweets-part-ii/" >Disaster Tweets - Part II</a></h2>
-      <div class="article-style">
-        
-          In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix.
-        
-      </div>
-    </div>
-  
-    
-    
-    
-    <div>
-      <h2><a href="/post/disaster-tweets-part-i/" >Disaster Tweets - Part I</a></h2>
-      <div class="article-style">
-        
-          Introduction Baseline model - Lasso model on just text Creating a model workflow Analysis of results Picking the best model variable importance Submission of results  Baseline with some additional features Rebuilding the data frame and variables Creating and tuning a model Variable importances Submission of results  Wonderings and lessons learned.
-        
-      </div>
-    </div>
-  
-    
-    
-    
-    <div>
-      <h2><a href="/post/2015-07-23-r-rmarkdown/" >Hello R Markdown</a></h2>
-      <div class="article-style">
-        
-          R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.
-        
-      </div>
-    </div>
-  
+    <div class="article-style">
+      
 
-  
 
+
+
+    </div>
+
+    
+
+
+
+
+
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=https://fderyckel.github.io/post/disaster-tweets-visuals/&amp;text=disaster_tweets_visuals" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=https://fderyckel.github.io/post/disaster-tweets-visuals/&amp;t=disaster_tweets_visuals" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=disaster_tweets_visuals&amp;body=https://fderyckel.github.io/post/disaster-tweets-visuals/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=https://fderyckel.github.io/post/disaster-tweets-visuals/&amp;title=disaster_tweets_visuals" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=disaster_tweets_visuals%20https://fderyckel.github.io/post/disaster-tweets-visuals/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=https://fderyckel.github.io/post/disaster-tweets-visuals/&amp;title=disaster_tweets_visuals" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+    
+    
+    
+      
+    
+    
+    
+    <div class="media author-card content-widget-hr">
+      
+        
+        <img class="avatar mr-3 avatar-circle" src="/author/francois-de-ryckel/avatar_hu2f41e612dcff73a93739a326eb68bc0c_287175_270x270_fill_lanczos_center_2.png" alt="François de Ryckel">
+      
+
+      <div class="media-body">
+        <h5 class="card-title"><a href="https://fderyckel.github.io/">François de Ryckel</a></h5>
+        <h6 class="card-subtitle">Teacher, Farmer, Educational Data Analyst</h6>
+        <p class="card-text">A travelling educator with a strong interest in farming, finance and modeling.</p>
+        <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/Read_The_Dung" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/francois-de-ryckel/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/fderyckel" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+      </div>
+    </div>
+  
+
+
+
+
+
+
+
+<section id="comments">
+  
+    
+<div id="disqus_thread"></div>
+<script>
+  let disqus_config = function () {
+    
+    
+    
+  };
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+      return;
+    }
+    var d = document, s = d.createElement('script'); s.async = true;
+    s.src = 'https://' + "fderyckelgithubio" + '.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  
+</section>
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
 
       
 

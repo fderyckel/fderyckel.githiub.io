@@ -5,7 +5,7 @@
     <link>https://fderyckel.github.io/</link>
       <atom:link href="https://fderyckel.github.io/index.xml" rel="self" type="application/rss+xml" />
     <description>François de Ryckel</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 26 May 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 05 Jun 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>François de Ryckel</title>
@@ -55,27 +55,24 @@
     </item>
     
     <item>
+      <title>disaster_tweets_visuals</title>
+      <link>https://fderyckel.github.io/post/disaster-tweets-visuals/</link>
+      <pubDate>Fri, 05 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>https://fderyckel.github.io/post/disaster-tweets-visuals/</guid>
+      <description>
+
+
+
+</description>
+    </item>
+    
+    <item>
       <title>Disaster Tweets - Part II</title>
       <link>https://fderyckel.github.io/post/disaster-tweets-part-ii/</link>
       <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
       <guid>https://fderyckel.github.io/post/disaster-tweets-part-ii/</guid>
       <description>
 
-&lt;div id=&#34;TOC&#34;&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#setting-up&#34;&gt;Setting up&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#finding-the-svd-matrix&#34;&gt;Finding the SVD matrix&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#svd-with-lasso&#34;&gt;SVD with Lasso&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#analysis-of-grid-results&#34;&gt;Analysis of grid results&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#make-predictions&#34;&gt;Make predictions&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#svd-with-xgboost&#34;&gt;SVD with Xgboost&lt;/a&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#variable-importance&#34;&gt;variable importance&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#submission-of-results&#34;&gt;Submission of results&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#references&#34;&gt;References&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
 
 &lt;p&gt;In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix. Hence this is still very much a BOW approach. This approach combined with xgboost gave us the best results without using word-embedding (or word-vectors) techniques. That said, we are not sure how this approach would work in production as it seems we would have to constantly regenerate the dense matrix (which is quite computationally intense). We would love to see / hear from others on how to use svd in this type of task.&lt;/p&gt;
 &lt;p&gt;In a sense, SVD can be seen as a dimensionality reduction technique:going from a very wide sparse matrix (as many columns as there are different words in all the tweets), to a dense one.&lt;/p&gt;
