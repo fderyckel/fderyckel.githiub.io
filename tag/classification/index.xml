@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Classification | François de Ryckel</title>
-    <link>/tag/classification/</link>
-      <atom:link href="/tag/classification/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://fderyckel.github.io/tag/classification/</link>
+      <atom:link href="https://fderyckel.github.io/tag/classification/index.xml" rel="self" type="application/rss+xml" />
     <description>Classification</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 26 May 2020 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>Classification</title>
-      <link>/tag/classification/</link>
+      <link>https://fderyckel.github.io/tag/classification/</link>
     </image>
     
     <item>
       <title>Disaster Tweets - Part II</title>
-      <link>/post/</link>
+      <link>https://fderyckel.github.io/post/</link>
       <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
-      <guid>/post/</guid>
+      <guid>https://fderyckel.github.io/post/</guid>
       <description>
 
 &lt;div id=&#34;TOC&#34;&gt;
@@ -31,13 +31,14 @@
 &lt;li&gt;&lt;a href=&#34;#variable-importance&#34;&gt;variable importance&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#submission-of-results&#34;&gt;Submission of results&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#references&#34;&gt;References&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 
 &lt;p&gt;In the second part of this NLP task, we will use Singular Value Decomposition to help us transform a sparse matrix (from the Document Term Matrix - dtm) into a dense matrix. Hence this is still very much a BOW approach. This approach combined with xgboost gave us the best results without using word-embedding (or word-vectors) techniques. That said, we are not sure how this approach would work in production as it seems we would have to constantly regenerate the dense matrix (which is quite computationally intense). We would love to see / hear from others on how to use svd in this type of task.&lt;/p&gt;
-&lt;p&gt;To use SVD can be seen as dimensionality reduction techniques here. Going from a very wide sparse matrix (as many columns as there are different words in all the tweets), to a less sparse one.&lt;/p&gt;
+&lt;p&gt;In a sense, SVD can be seen as a dimensionality reduction technique:going from a very wide sparse matrix (as many columns as there are different words in all the tweets), to a dense one.&lt;/p&gt;
 &lt;p&gt;So let’s first to build that sparse matrix: on the rows, the document number (in this case the tweet ID) on the columns the word (1 word per column)&lt;/p&gt;
-&lt;p&gt;Because the dimensionality reduction is based on the words and their co-occurrence, we need to use the whole dataset for this task. Of course this is not really reasonable in the case of new cases.&lt;/p&gt;
+&lt;p&gt;Because the dimensionality reduction is based on the words, we need to use the whole dataset for this task. Of course this is not really reasonable in the case of new cases.&lt;/p&gt;
 &lt;p&gt;Also, since we have already developed a whole cleaning workflow, let’s re-use it on the whole df.&lt;/p&gt;
 &lt;div id=&#34;setting-up&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Setting up&lt;/h1&gt;
@@ -188,7 +189,8 @@ dim(yo)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## [1] 10876   750&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df4 &amp;lt;- bind_cols(id = as.numeric(mat_df_id), yo)
 write_rds(x = df4, path = &amp;quot;~/disaster_tweets/data/svd_df_all750.rds&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It is worth mentioning that singular value decomposition didn’t parallelized on my machine and took like 3hrs to get the matrix. That’s why we have saved it for further used.&lt;/p&gt;
+&lt;p&gt;It is worth mentioning that singular value decomposition didn’t parallelized on my machine and it took a bit over 3hrs to get the matrix. That’s why we have saved it for further used.
+[When I used irlba on our university computer (84 cores, over 750 Gb of RAM), it did parallelized very nicely on all core and it didn’t take more than 5 min.]&lt;/p&gt;
 &lt;p&gt;Now that we have our dense matrix, we can start to fit back all the pieces together for our modelling process.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_train &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/train.csv&amp;quot;) %&amp;gt;% clean_tweets()
 
@@ -275,7 +277,7 @@ metrics %&amp;gt;%
   geom_line() + 
   facet_wrap(~.metric) + 
   scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;make-predictions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Make predictions&lt;/h2&gt;
@@ -291,6 +293,7 @@ prediction_lasso_svd %&amp;gt;% write_csv(path = &amp;quot;~/disaster_tweets/dat
 
 # clean everything 
 rm(list =  ls())&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;On the training set with cross-validation, this model with a penalty of 0.001681, gave us f1 = 73.99, accuracy = 79.3, roc = 85.4. On Kaggle, this model gave us a public score of 76.79. This is not really good considering we got much better results earlier with our &lt;a href=&#34;https://fderyckel.github.io/post/disaster-tweets-part-i/#baseline-with-some-additional-features&#34;&gt;enhanced approach&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;svd-with-xgboost&#34; class=&#34;section level1&#34;&gt;
@@ -382,13 +385,22 @@ last_fit(wf_xgboost, rsplit_df) %&amp;gt;% collect_metrics()&lt;/code&gt;&lt;/pr
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#save the final lasso model
 model_xgboost_svd &amp;lt;- fit(wf_xgboost, df_train)
 write_rds(x = model_xgboost_svd, path = &amp;quot;~/disaster_tweets/data/model_xgboost_svd750.rds&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Using xgboost in combination with svd gives much better results. Here are a few things that we have tried with our training data:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;svd 1000 wide matrix and xgboost with 150 mtry, 2500 trees, 5 tree-depth, gave us f1 = 74.77, accuracy = 80.90, roc = 86.45&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;svd 750 wide matrix and xgboost with 150 mtry, 2000 trees, 6 tree-depth, gave us f1 = 74.99, accuracy = 81.05, roc = 87&lt;/li&gt;
+&lt;li&gt;svd 500 wide matrix and xgboost with 200 mtry, 2000 trees, 6 tree-depth, gave us f1 = 75.11, accuracy = 81.02, roc = 86.87&lt;/li&gt;
+&lt;li&gt;svd 250 wide matrix and xgboost with 125 mtry, 1500 trees, 5 tree-depth, gave us f1 = 74.93, accuracy = 80.81, roc = 86.62&lt;/li&gt;
+&lt;/ul&gt;
 &lt;div id=&#34;variable-importance&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;variable importance&lt;/h2&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(vip)
 model_xgboost_svd %&amp;gt;% 
   pull_workflow_fit() %&amp;gt;% 
   vip::vip(geom = &amp;quot;point&amp;quot;, num_features=20) #%&amp;gt;% arrange(desc(Importance)) %&amp;gt;% &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Clearly, we can’t interpret anymore our variables as they are the result of singular variable decomposition of a tf-idf sparse matrix. However, we are happy to see that our extra variables have played a role in determining if a tweet was about real disaster or not.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;submission-of-results&#34; class=&#34;section level1&#34;&gt;
@@ -402,20 +414,27 @@ prediction_xgboost_svd &amp;lt;- tibble(id = df_test$id,
                                  target = if_else(predict(model_xgboost_svd, new_data = df_test) == &amp;quot;a_truth&amp;quot;, 1, 0))
 
 prediction_xgboost_svd %&amp;gt;% write_csv(path = &amp;quot;~/disaster_tweets/data/prediction_svd_xgboost750.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Note 1: majority voting, svd with 850 wide, using lasso, got 77% public score.
-Note 2: majority voting, svd 1000 wide, using
-Note 3: majority voting, svd with 1000 wide, using lasso, got % public score.&lt;/p&gt;
+&lt;p&gt;Note 1: majority voting, svd with 850 wide, using lasso, got 77% public score.&lt;/p&gt;
+&lt;p&gt;Note 2: majority voting, svd 500 wide, using xgboost with 200 mtry, 2000 trees, 6 tree-depth, got a 80.01 public score.&lt;/p&gt;
+&lt;p&gt;Note 3: majority voting, svd with 750 wide, using xgboost with 200 mtry, 2000 trees, 6 tree-depth, got 81.29% public score. Yeahhh!!!!!!!&lt;/p&gt;
+&lt;p&gt;Here is a screenshot of our results:&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;References&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;To help with the use of irlba and &lt;a href=&#34;https://www.kaggle.com/barun2104/nlp-with-disaster-eda-dfm-svd-ensemble&#34;&gt;check for the complete matrix&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;/div&gt;
 </description>
     </item>
     
     <item>
       <title>Disaster Tweets - Part I</title>
-      <link>/post/disaster-tweets-part-i/</link>
+      <link>https://fderyckel.github.io/post/disaster-tweets-part-i/</link>
       <pubDate>Mon, 25 May 2020 00:00:00 +0000</pubDate>
-      <guid>/post/disaster-tweets-part-i/</guid>
+      <guid>https://fderyckel.github.io/post/disaster-tweets-part-i/</guid>
       <description>
-&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://fderyckel.github.io/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
 
 &lt;div id=&#34;TOC&#34;&gt;
 &lt;ul&gt;
@@ -1001,7 +1020,7 @@ metrics %&amp;gt;%
   geom_line() + 
   facet_wrap(~.metric) + 
   scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/checking-metrics_lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/checking-metrics_lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Using the plots, we can see that there is only a small window of penalty values that will increase the performance of of the model. We keep that in mind for the next time we create our grid of penalties.&lt;/p&gt;
 &lt;p&gt;Because our dataset is somehow balance, we could choose &lt;strong&gt;accuracy&lt;/strong&gt; as a measure of model validity. The best accuracy on this base model is 76.2 % for the training set. That said because Kaggle choose F1 as a performance metric, let’s choose the penalty with highest &lt;strong&gt;f_meas&lt;/strong&gt; and fit it to our testing set.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# let check the penalties values that give the best performances
@@ -1338,7 +1357,7 @@ write_rds(x = model_lasso_base, path = &amp;quot;~/disaster_tweets/data/model_la
   geom_col(show.legend = FALSE) +
   facet_wrap(~Sign, scales = &amp;quot;free_y&amp;quot;) +
   labs(y = NULL) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/checking-variable-importance-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/checking-variable-importance-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;For some reasons, I need to change the label of each graph. The “POS” terms will most likely give place to not a real emergency tweet.&lt;/p&gt;
 &lt;p&gt;Although I am glad that the “lmao” expression is more often related to tweets that are not about real emergency, I am confused as to why “https” is one side and “t.co” on the other sides. They are both about links. 🤔&lt;/p&gt;
 &lt;/div&gt;
@@ -2376,7 +2395,7 @@ read_rds(&amp;quot;~/disaster_tweets/data/model_lasso_enhanced.rds&amp;quot;) %&
   facet_wrap(~Sign, scales = &amp;quot;free_y&amp;quot;) +
   labs(y = NULL, x = &amp;quot;Sign&amp;quot;)  &lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:vip-lasso-enhanced&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/vip-lasso-enhanced-1.png&#34; alt=&#34;Most important variables.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/vip-lasso-enhanced-1.png&#34; alt=&#34;Most important variables.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 1: Most important variables.
 &lt;/p&gt;

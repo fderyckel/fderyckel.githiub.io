@@ -2,23 +2,23 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Lasso | François de Ryckel</title>
-    <link>/tag/lasso/</link>
-      <atom:link href="/tag/lasso/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://fderyckel.github.io/tag/lasso/</link>
+      <atom:link href="https://fderyckel.github.io/tag/lasso/index.xml" rel="self" type="application/rss+xml" />
     <description>Lasso</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 25 May 2020 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>Lasso</title>
-      <link>/tag/lasso/</link>
+      <link>https://fderyckel.github.io/tag/lasso/</link>
     </image>
     
     <item>
       <title>Disaster Tweets - Part I</title>
-      <link>/post/disaster-tweets-part-i/</link>
+      <link>https://fderyckel.github.io/post/disaster-tweets-part-i/</link>
       <pubDate>Mon, 25 May 2020 00:00:00 +0000</pubDate>
-      <guid>/post/disaster-tweets-part-i/</guid>
+      <guid>https://fderyckel.github.io/post/disaster-tweets-part-i/</guid>
       <description>
-&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://fderyckel.github.io/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
 
 &lt;div id=&#34;TOC&#34;&gt;
 &lt;ul&gt;
@@ -604,7 +604,7 @@ metrics %&amp;gt;%
   geom_line() + 
   facet_wrap(~.metric) + 
   scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/checking-metrics_lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/checking-metrics_lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Using the plots, we can see that there is only a small window of penalty values that will increase the performance of of the model. We keep that in mind for the next time we create our grid of penalties.&lt;/p&gt;
 &lt;p&gt;Because our dataset is somehow balance, we could choose &lt;strong&gt;accuracy&lt;/strong&gt; as a measure of model validity. The best accuracy on this base model is 76.2 % for the training set. That said because Kaggle choose F1 as a performance metric, let’s choose the penalty with highest &lt;strong&gt;f_meas&lt;/strong&gt; and fit it to our testing set.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# let check the penalties values that give the best performances
@@ -941,7 +941,7 @@ write_rds(x = model_lasso_base, path = &amp;quot;~/disaster_tweets/data/model_la
   geom_col(show.legend = FALSE) +
   facet_wrap(~Sign, scales = &amp;quot;free_y&amp;quot;) +
   labs(y = NULL) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/checking-variable-importance-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/checking-variable-importance-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;For some reasons, I need to change the label of each graph. The “POS” terms will most likely give place to not a real emergency tweet.&lt;/p&gt;
 &lt;p&gt;Although I am glad that the “lmao” expression is more often related to tweets that are not about real emergency, I am confused as to why “https” is one side and “t.co” on the other sides. They are both about links. 🤔&lt;/p&gt;
 &lt;/div&gt;
@@ -1979,7 +1979,7 @@ read_rds(&amp;quot;~/disaster_tweets/data/model_lasso_enhanced.rds&amp;quot;) %&
   facet_wrap(~Sign, scales = &amp;quot;free_y&amp;quot;) +
   labs(y = NULL, x = &amp;quot;Sign&amp;quot;)  &lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:vip-lasso-enhanced&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/vip-lasso-enhanced-1.png&#34; alt=&#34;Most important variables.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/vip-lasso-enhanced-1.png&#34; alt=&#34;Most important variables.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 1: Most important variables.
 &lt;/p&gt;

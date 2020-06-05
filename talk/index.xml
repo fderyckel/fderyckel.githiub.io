@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Recent &amp; Upcoming Talks | François de Ryckel</title>
-    <link>/talk/</link>
-      <atom:link href="/talk/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://fderyckel.github.io/talk/</link>
+      <atom:link href="https://fderyckel.github.io/talk/index.xml" rel="self" type="application/rss+xml" />
     <description>Recent &amp; Upcoming Talks</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 23 Jan 2019 11:00:00 +0000</lastBuildDate>
     <image>
-      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>Recent &amp; Upcoming Talks</title>
-      <link>/talk/</link>
+      <link>https://fderyckel.github.io/talk/</link>
     </image>
     
     <item>
       <title>A Philosophical Odyssey in The Concept of Time</title>
-      <link>/talk/timeodyssey/</link>
+      <link>https://fderyckel.github.io/talk/timeodyssey/</link>
       <pubDate>Wed, 23 Jan 2019 11:00:00 +0000</pubDate>
-      <guid>/talk/timeodyssey/</guid>
+      <guid>https://fderyckel.github.io/talk/timeodyssey/</guid>
       <description>&lt;div class=&#34;responsive-wrap&#34;&gt;
   &lt;iframe src=&#34;https://docs.google.com/presentation/d/e/2PACX-1vQa6PAaw5udo0gszSTiniZ8-0hJ3h4k55CBG0e-zaG8y3-Jf6ZSjqYlHLnEF5tLYbUOrCo4Bp2_z8Av/embed?start=true&amp;amp;loop=false&amp;amp;delayms=5000&#34; frameborder=&#34;0&#34; width=&#34;960&#34; height=&#34;569&#34; allowfullscreen=&#34;true&#34; mozallowfullscreen=&#34;true&#34; webkitallowfullscreen=&#34;true&#34;&gt;&lt;/iframe&gt;
 &lt;/div&gt;
@@ -25,9 +25,9 @@
     
     <item>
       <title>Example Talk</title>
-      <link>/talk/example/</link>
+      <link>https://fderyckel.github.io/talk/example/</link>
       <pubDate>Sun, 01 Jun 2003 13:00:00 +0000</pubDate>
-      <guid>/talk/example/</guid>
+      <guid>https://fderyckel.github.io/talk/example/</guid>
       <description>&lt;div class=&#34;alert alert-note&#34;&gt;
   &lt;div&gt;
     Click on the &lt;strong&gt;Slides&lt;/strong&gt; button above to view the built-in slides feature.
