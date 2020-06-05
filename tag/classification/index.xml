@@ -403,7 +403,7 @@ prediction_xgboost_svd %&amp;gt;% write_csv(path = &amp;quot;~/disaster_tweets/d
 &lt;p&gt;Note 2: majority voting, svd 500 wide, using xgboost with 200 mtry, 2000 trees, 6 tree-depth, got a 80.01 public score.&lt;/p&gt;
 &lt;p&gt;Note 3: majority voting, svd with 750 wide, using xgboost with 200 mtry, 2000 trees, 6 tree-depth, got 81.29% public score. Yeahhh!!!!!!!&lt;/p&gt;
 &lt;p&gt;Here is a screenshot of our results:&lt;br /&gt;
-&lt;img src=&#34;https://fderyckel.github.io/disaster-tweets-II/index_files/screenshot-results.png&#34; alt=&#34;screenshot of results&#34; /&gt;&lt;/p&gt;
+&lt;img src=&#34;https://fderyckel.github.io/img/screenshot-results.png&#34; alt=&#34;screenshot of results&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;
