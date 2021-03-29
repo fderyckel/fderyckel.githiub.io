@@ -2,21 +2,261 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>kaggle | François de Ryckel</title>
-    <link>https://fderyckel.github.io/tag/kaggle/</link>
-      <atom:link href="https://fderyckel.github.io/tag/kaggle/index.xml" rel="self" type="application/rss+xml" />
+    <link>/tag/kaggle/</link>
+      <atom:link href="/tag/kaggle/index.xml" rel="self" type="application/rss+xml" />
     <description>kaggle</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 26 May 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 07 Jun 2020 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>kaggle</title>
-      <link>https://fderyckel.github.io/tag/kaggle/</link>
+      <link>/tag/kaggle/</link>
     </image>
     
     <item>
+      <title>Disaster Tweets  - Part iii</title>
+      <link>/post/disaster-tweets-part-iii/</link>
+      <pubDate>Sun, 07 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>/post/disaster-tweets-part-iii/</guid>
+      <description>
+
+
+&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(readr)      # to read and write (import / export) any type into our R console.
+library(dplyr)      # for pretty much all our data wrangling
+library(ggplot2)
+library(stringr)
+library(forcats)
+library(purrr)
+
+library(janitor)    # to clear variable names with clean_names()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;using-glove-embedding&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Using glove embedding&lt;/h1&gt;
+&lt;p&gt;GloVe is an unsupervised learning algorithm for obtaining vector representations for words. Training is performed on aggregated global word-word co-occurrence statistics from a corpus, and the resulting representations showcase interesting linear substructures of the word vector space.&lt;a href=&#34;#fn1&#34; class=&#34;footnote-ref&#34; id=&#34;fnref1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;GloVe encodes the ratios of word-word co-occurrence probabilities, which is thought to represent some crude form of meaning associated with the abstract concept of the word, as vector difference. The training objective of GloVe is to learn word vectors such that their dot product equals the logarithm of the words’ probability of co-occurrence.&lt;/p&gt;
+&lt;p&gt;The simple workflow for vectorizing tweet text into glove embeddings is as follows - ^/[&lt;a href=&#34;https://www.adityamangal.com/2020/02/nlp-with-disaster-tweets-part-1/&#34; class=&#34;uri&#34;&gt;https://www.adityamangal.com/2020/02/nlp-with-disaster-tweets-part-1/&lt;/a&gt;]&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Tokenize incoming tweet texts in the training data.&lt;/li&gt;
+&lt;li&gt;Download and parse glove embeddings into an embedding matrix for the tokenized words.&lt;/li&gt;
+&lt;li&gt;Generate embeddings vector for tweets text in training data.&lt;/li&gt;
+&lt;li&gt;Generate embeddings vector for tweets text in test data.&lt;/li&gt;
+&lt;li&gt;Append to given tweets features and export.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We will not stem or lemmatize the tweets at first; this will keep most of the meaning in the word used.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;clean_tweets &amp;lt;- function(df){
+  df &amp;lt;- df  %&amp;gt;% 
+    mutate(number_hashtag = str_count(string = text, pattern = &amp;quot;#&amp;quot;), 
+           number_number = str_count(string = text, pattern = &amp;quot;[0-9]&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_http = str_count(string = text, pattern = &amp;quot;http&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_mention = str_count(string = text, pattern = &amp;quot;@&amp;quot;) %&amp;gt;% as.numeric(), 
+           number_location = if_else(!is.na(location), 1, 0), 
+           number_keyword = if_else(!is.na(keyword), 1, 0), 
+           number_repeated_char = str_count(string = text, pattern = &amp;quot;([a-z])\\1{2}&amp;quot;) %&amp;gt;% as.numeric(),  
+           text = str_replace_all(string = text, pattern = &amp;quot;http[^[:space:]]*&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           text = str_replace_all(string = text, pattern = &amp;quot;@[^[:space:]]*&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           number_char = nchar(text),   #add the length of the tweet in character. 
+           number_word = str_count(string = text, pattern = &amp;quot;\\w+&amp;quot;), 
+           text = str_replace_all(string = text, pattern = &amp;quot;[0-9]&amp;quot;, replacement = &amp;quot;&amp;quot;), 
+           text = future_map(text, function(.x) stringi::stri_trans_general(.x, &amp;quot;Latin-ASCII&amp;quot;)) %&amp;gt;% unlist(.), 
+           text = str_replace_all(string = text, pattern  = &amp;quot;\u0089&amp;quot;, replacement = &amp;quot;&amp;quot;)) %&amp;gt;% 
+  select(-keyword, -location) 
+  return(df)
+}
+
+library(furrr)
+plan(&amp;quot;multicore&amp;quot;)
+df_train &amp;lt;- read_csv(&amp;quot;~/disaster_tweets/data/train.csv&amp;quot;) %&amp;gt;% clean_tweets()
+
+# sorting out the same tweets, different target issues 
+temp &amp;lt;- df_train %&amp;gt;% group_by(text) %&amp;gt;% 
+  mutate(mean_target = mean(target), 
+         new_target = if_else(mean_target &amp;gt; 0.5, 1, 0)) %&amp;gt;% ungroup() %&amp;gt;% 
+  mutate(target = new_target, 
+         target_bin = factor(if_else(target == 1, &amp;quot;a_truth&amp;quot;, &amp;quot;b_false&amp;quot;))) %&amp;gt;% 
+  select(-new_target, -mean_target, -target)
+
+df_train &amp;lt;- temp&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Using keras’ text_tokenizer to tokenize the text in tweets dataset.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(keras)
+
+# we assign each word in the whole tweets df corpus an ID 
+tokenizer &amp;lt;- text_tokenizer() %&amp;gt;% fit_text_tokenizer(df_train$text)
+
+# if we want to check how many different words were in the corpus. 
+# we do +1 because we&amp;#39;re dealing with Python. 
+num_words &amp;lt;- length(tokenizer$word_index) + 1
+
+# Using the above fit tokenizer, one now convert all the text to an actual sequences of indices.
+sequences &amp;lt;- texts_to_sequences(tokenizer, df_train$text)
+
+## how long is the longest tweet?  33 words! We can use that as the base for padding. 
+summary(map_int(sequences, length))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    9.00   13.00   13.64   18.00   32.00&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;max_tweet_length &amp;lt;- max(map_int(sequences, length))
+
+# now, we need to pad all other tweet to a length of 33. 
+# by default we pad first, then put the text. 
+padded_sequences &amp;lt;- pad_sequences(sequences = sequences, maxlen = max_tweet_length)
+
+# checking that we do have a 7613 tweets x 32 columns matrix. 
+dim(padded_sequences) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 7613   32&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s have a look at the first 5 tweet were, their conversion into indices and their final padded form.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# the first 5 tweets in words
+df_train$text[1:5]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;Our Deeds are the Reason of this #earthquake May ALLAH Forgive us all&amp;quot;                                                                
+## [2] &amp;quot;Forest fire near La Ronge Sask. Canada&amp;quot;                                                                                               
+## [3] &amp;quot;All residents asked to &amp;#39;shelter in place&amp;#39; are being notified by officers. No other evacuation or shelter in place orders are expected&amp;quot;
+## [4] &amp;quot;, people receive #wildfires evacuation orders in California&amp;quot;                                                                          
+## [5] &amp;quot;Just got sent this photo from Ruby #Alaska as smoke from #wildfires pours into a school&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# the first 5 tweets in indices
+sequences[1:5]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [[1]]
+##  [1]  113 4389   20    1  830    5   18  247  135 1562 4390   84   36
+## 
+## [[2]]
+## [1]  184   42  215  764 6440 6441 1354
+## 
+## [[3]]
+##  [1]   36 1690 1563    4 6442    3 6443   20  128 6444   17 1691   35  419  241
+## [16]   53 2085    3  686 1355   20 1070
+## 
+## [[4]]
+## [1]   58 4391 1447  241 1355    3   91
+## 
+## [[5]]
+##  [1]   30   92 1182   18  312   19 6445 2356   26  256   19 1447 6446   66    2
+## [16]  179&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# And the first tweet with padding 
+padded_sequences[1:5, ]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]
+## [1,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0
+## [2,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0
+## [3,]    0    0    0    0    0    0    0    0    0     0    36  1690  1563     4
+## [4,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0
+## [5,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0
+##      [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25] [,26]
+## [1,]     0     0     0     0     0   113  4389    20     1   830     5    18
+## [2,]     0     0     0     0     0     0     0     0     0     0     0   184
+## [3,]  6442     3  6443    20   128  6444    17  1691    35   419   241    53
+## [4,]     0     0     0     0     0     0     0     0     0     0     0    58
+## [5,]     0     0    30    92  1182    18   312    19  6445  2356    26   256
+##      [,27] [,28] [,29] [,30] [,31] [,32]
+## [1,]   247   135  1562  4390    84    36
+## [2,]    42   215   764  6440  6441  1354
+## [3,]  2085     3   686  1355    20  1070
+## [4,]  4391  1447   241  1355     3    91
+## [5,]    19  1447  6446    66     2   179&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;??????? A total of 22701 unique words were assigned an index in the tokenization.&lt;/p&gt;
+&lt;p&gt;Borrowing the code from Aditya Mangal’s blog &lt;a href=&#34;#fn2&#34; class=&#34;footnote-ref&#34; id=&#34;fnref2&#34;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt; for parsing and generating glove embedding matrix from my deepSentimentR package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;parse_glove_embeddings &amp;lt;- function(file_path) {
+  lines &amp;lt;- readLines(file_path)
+  embeddings_index &amp;lt;- new.env(hash = TRUE, parent = emptyenv())
+  for (i in 1:length(lines)) {
+    line &amp;lt;- lines[[i]]
+    values &amp;lt;- strsplit(line, &amp;quot; &amp;quot;)[[1]]
+    word &amp;lt;- values[[1]]
+    embeddings_index[[word]] &amp;lt;- as.double(values[-1])
+  }
+  cat(&amp;quot;Found&amp;quot;, length(embeddings_index), &amp;quot;word vectors.\n&amp;quot;)
+  return(embeddings_index)
+}
+
+generate_embedding_matrix &amp;lt;- function(word_index, embedding_dim, max_words, glove_file_path) {
+  embeddings_index &amp;lt;- parse_glove_embeddings(glove_file_path)
+
+  embedding_matrix &amp;lt;- array(0, c(max_words, embedding_dim))
+  for (word in names(word_index)) {
+    index &amp;lt;- word_index[[word]]
+    if (index &amp;lt; max_words) {
+      embedding_vector &amp;lt;- embeddings_index[[word]]
+      if (!is.null(embedding_vector)) {
+        embedding_matrix[index+1,] &amp;lt;- embedding_vector
+      }
+    }
+  }
+
+  return(embedding_matrix)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The Glove project has a Twitter dataset trained on 2B tweets with 27B tokens. It comes with word vectors that are 25d, 50d, 100d or 200d.&lt;/p&gt;
+&lt;p&gt;We’ll try different variant and we’ll adjust in functions of our results.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# To pick the length of each word vectors 
+embedding_dim &amp;lt;- 25
+#embedding_dim &amp;lt;- 50
+
+# this operation is the crux of the whole numerization of our text. 
+# we basically assign a word-vector for each word. We decided to go with a 50d dense vector.  
+embedding_matrix &amp;lt;- generate_embedding_matrix(tokenizer$word_index, embedding_dim = 25, max_words = num_words, 
+                                             &amp;quot;~/glove/glove.twitter.27B.25d.txt&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Found 1193514 word vectors.&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#embedding_matrix &amp;lt;- generate_embedding_matrix(tokenizer$word_index, embedding_dim = 50, max_words = num_words, 
+ #                                            &amp;quot;data_glove.twitter.27B/glove.twitter.27B.50d.txt&amp;quot;)
+
+#there were around 12,638 different words in all the tweets.  We have change all of these words in a 50d vectors. 
+# so now we should have a matrix of dimension 12638 by 50
+dim(embedding_matrix)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 15093    25&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Let&amp;#39;s save that precious matrix for further use
+#write_rds(x = embedding_matrix, path = &amp;quot;data/embedding_matrix_50d.rds&amp;quot;)
+write_rds(x = embedding_matrix, path = &amp;quot;~/disaster_tweets/data/embedding_matrix_25d.rds&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Using the Keras modeling framework to generate embeddings for the given training data. We basically create a simple sequential model with one embedding layer whose weights we will freeze based on our embedding matrix created above, and a flattening layer that will flatten the output into a 2D matrix of dimensions 7613, 32x25 for 25d and (7613, 32x50) for 50d word vectors.&lt;/p&gt;
+&lt;p&gt;Remember the longest tweet had 32 words. Each words is a 50d vector. So we want at the end matrix of 7613 x 1600 or (32x50). For many tweets, that matrix going to start with a bunch of zeros because of the padding. Remember the padding is at the start in our case.&lt;/p&gt;
+&lt;p&gt;So we now we need to apply that embedding to each of the 7613 tweet. Keras will do that for us.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;embedding_matrix &amp;lt;- read_rds(&amp;quot;~/disaster_tweets/data/embedding_matrix_25d.rds&amp;quot;)
+#embedding_matrix &amp;lt;- read_rds(&amp;quot;data/embedding_matrix_50d.rds&amp;quot;)
+
+model_embedding &amp;lt;- keras_model_sequential() %&amp;gt;% 
+  layer_embedding(input_dim = num_words, #number of total words in all of the tweets  
+                  output_dim = embedding_dim, #the length of our embedding vectors (50d in this case)
+                  input_length = max_tweet_length, #the number of words of the longest tweet.  All other tweets will be padded to have that length
+                  name = &amp;quot;embedding&amp;quot;) %&amp;gt;% 
+  layer_flatten(name = &amp;quot;flatten&amp;quot;)
+
+model_embedding %&amp;gt;% 
+  get_layer(name = &amp;quot;embedding&amp;quot;) %&amp;gt;% 
+  set_weights(list(embedding_matrix)) %&amp;gt;% 
+  freeze_weights()
+
+tweets_embedding &amp;lt;- model_embedding %&amp;gt;% predict(padded_sequences)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So, let’s make sense of what is happening. Each tweets is now 800 variables long (32 words x 25d). The first tweet was: [1] “Our deed be the Reason of this # earthquake May ALLAH Forgive us all”. This tweet is 13 words long. So the last 325 variables should be filled, when the first 475 should be 0s. Let’s check that.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;str(tweets_embedding)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  num [1:7613, 1:800] 0 0 0 0 0 0 0 0 0 0 ...&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# and part of the first tweet. 
+tweets_embedding[1, 450:500]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1]  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+##  [8]  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+## [15]  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+## [22]  0.000000  0.000000  0.000000  0.000000  0.000000 -0.420470  0.565260
+## [29] -0.033577  0.310190  0.189300 -0.645880  1.387600 -0.574840 -0.138960
+## [36] -0.390030 -0.169110 -0.073094 -5.702100  0.812640 -0.412840 -0.438670
+## [43]  0.361850 -0.344710  0.146530  0.076999 -1.275600 -0.631900 -0.635160
+## [50] -0.517290 -0.901670&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can now add these matrix to our initial df.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_train_glove &amp;lt;- bind_cols(df_train, as_tibble(tweets_embedding, .name_repair = &amp;quot;unique&amp;quot;) %&amp;gt;% clean_names()) %&amp;gt;% 
+  clean_names()
+
+# and let&amp;#39;s save all this had work! 
+write_rds(x = df_train_glove, path = &amp;quot;~/disaster_tweets/data/train_glove_25d.rds&amp;quot;)
+#write_rds(x = df_train_glove, path = &amp;quot;data/train_glove_50d.rds&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Before we go on and model, we still need to process our test data.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://nlp.stanford.edu/projects/glove/&#34; class=&#34;uri&#34;&gt;https://nlp.stanford.edu/projects/glove/&lt;/a&gt;&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn2&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://www.adityamangal.com/2020/02/nlp-with-disaster-tweets-part-1/&#34; class=&#34;uri&#34;&gt;https://www.adityamangal.com/2020/02/nlp-with-disaster-tweets-part-1/&lt;/a&gt;&lt;a href=&#34;#fnref2&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Disaster Tweets - Part II</title>
-      <link>https://fderyckel.github.io/post/disaster-tweets-part-ii/</link>
+      <link>/post/disaster-tweets-part-ii/</link>
       <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
-      <guid>https://fderyckel.github.io/post/disaster-tweets-part-ii/</guid>
+      <guid>/post/disaster-tweets-part-ii/</guid>
       <description>
 
 
@@ -262,7 +502,7 @@ metrics %&amp;gt;%
   geom_line() + 
   facet_wrap(~.metric) + 
   scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;make-predictions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Make predictions&lt;/h2&gt;
@@ -384,7 +624,7 @@ write_rds(x = model_xgboost_svd, path = &amp;quot;~/disaster_tweets/data/model_x
 model_xgboost_svd %&amp;gt;% 
   pull_workflow_fit() %&amp;gt;% 
   vip::vip(geom = &amp;quot;point&amp;quot;, num_features=20) #%&amp;gt;% arrange(desc(Importance)) %&amp;gt;% &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Clearly, we can’t interpret anymore our variables as they are the result of singular variable decomposition of a tf-idf sparse matrix. However, we are happy to see that our extra variables have played a role in determining if a tweet was about real disaster or not.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -403,7 +643,7 @@ prediction_xgboost_svd %&amp;gt;% write_csv(path = &amp;quot;~/disaster_tweets/d
 &lt;p&gt;Note 2: majority voting, svd 500 wide, using xgboost with 200 mtry, 2000 trees, 6 tree-depth, got a 80.01 public score.&lt;/p&gt;
 &lt;p&gt;Note 3: majority voting, svd with 750 wide, using xgboost with 200 mtry, 2000 trees, 6 tree-depth, got 81.29% public score. Yeahhh!!!!!!!&lt;/p&gt;
 &lt;p&gt;Here is a screenshot of our results:&lt;br /&gt;
-&lt;img src=&#34;https://fderyckel.github.io/img/screenshot-results.png&#34; alt=&#34;screenshot of results&#34; /&gt;&lt;/p&gt;
+&lt;img src=&#34;/img/screenshot-results.png&#34; alt=&#34;screenshot of results&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;
@@ -416,11 +656,11 @@ prediction_xgboost_svd %&amp;gt;% write_csv(path = &amp;quot;~/disaster_tweets/d
     
     <item>
       <title>Disaster Tweets - Part I</title>
-      <link>https://fderyckel.github.io/post/disaster-tweets-part-i/</link>
+      <link>/post/disaster-tweets-part-i/</link>
       <pubDate>Mon, 25 May 2020 00:00:00 +0000</pubDate>
-      <guid>https://fderyckel.github.io/post/disaster-tweets-part-i/</guid>
+      <guid>/post/disaster-tweets-part-i/</guid>
       <description>
-&lt;script src=&#34;https://fderyckel.github.io/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
 
 &lt;div id=&#34;TOC&#34;&gt;
 &lt;ul&gt;
@@ -1006,7 +1246,7 @@ metrics %&amp;gt;%
   geom_line() + 
   facet_wrap(~.metric) + 
   scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/checking-metrics_lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/checking-metrics_lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Using the plots, we can see that there is only a small window of penalty values that will increase the performance of of the model. We keep that in mind for the next time we create our grid of penalties.&lt;/p&gt;
 &lt;p&gt;Because our dataset is somehow balance, we could choose &lt;strong&gt;accuracy&lt;/strong&gt; as a measure of model validity. The best accuracy on this base model is 76.2 % for the training set. That said because Kaggle choose F1 as a performance metric, let’s choose the penalty with highest &lt;strong&gt;f_meas&lt;/strong&gt; and fit it to our testing set.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# let check the penalties values that give the best performances
@@ -1343,7 +1583,7 @@ write_rds(x = model_lasso_base, path = &amp;quot;~/disaster_tweets/data/model_la
   geom_col(show.legend = FALSE) +
   facet_wrap(~Sign, scales = &amp;quot;free_y&amp;quot;) +
   labs(y = NULL) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/checking-variable-importance-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/checking-variable-importance-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;For some reasons, I need to change the label of each graph. The “POS” terms will most likely give place to not a real emergency tweet.&lt;/p&gt;
 &lt;p&gt;Although I am glad that the “lmao” expression is more often related to tweets that are not about real emergency, I am confused as to why “https” is one side and “t.co” on the other sides. They are both about links. 🤔&lt;/p&gt;
 &lt;/div&gt;
@@ -2381,7 +2621,7 @@ read_rds(&amp;quot;~/disaster_tweets/data/model_lasso_enhanced.rds&amp;quot;) %&
   facet_wrap(~Sign, scales = &amp;quot;free_y&amp;quot;) +
   labs(y = NULL, x = &amp;quot;Sign&amp;quot;)  &lt;/code&gt;&lt;/pre&gt;
 &lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:vip-lasso-enhanced&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-I/index_files/figure-html/vip-lasso-enhanced-1.png&#34; alt=&#34;Most important variables.&#34; width=&#34;672&#34; /&gt;
+&lt;img src=&#34;/post/disaster-tweets-I/index_files/figure-html/vip-lasso-enhanced-1.png&#34; alt=&#34;Most important variables.&#34; width=&#34;672&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;
 Figure 1: Most important variables.
 &lt;/p&gt;

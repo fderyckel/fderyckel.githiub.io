@@ -1,0 +1,1373 @@
+<!DOCTYPE html><html lang="en-us" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="François de Ryckel">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction library(readr) # to read and write (import / export) any type into our R console. library(dplyr) # for pretty much all our data wrangling library(ggplot2) library(stringr) library(forcats) library(purrr) library(janitor) # to clear variable names with clean_names()  Using glove embedding GloVe is an unsupervised learning algorithm for obtaining vector representations for words.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/disaster-tweets-part-iii/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#EF525B">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/disaster-tweets-part-iii/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@Read_The_Dung">
+  <meta property="twitter:creator" content="@Read_The_Dung">
+  
+  <meta property="og:site_name" content="François de Ryckel">
+  <meta property="og:url" content="/post/disaster-tweets-part-iii/">
+  <meta property="og:title" content="Disaster Tweets  - Part iii | François de Ryckel">
+  <meta property="og:description" content="Introduction library(readr) # to read and write (import / export) any type into our R console. library(dplyr) # for pretty much all our data wrangling library(ggplot2) library(stringr) library(forcats) library(purrr) library(janitor) # to clear variable names with clean_names()  Using glove embedding GloVe is an unsupervised learning algorithm for obtaining vector representations for words."><meta property="og:image" content="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png">
+  <meta property="twitter:image" content="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-06-07T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-06-07T07:43:11&#43;03:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/disaster-tweets-part-iii/"
+  },
+  "headline": "Disaster Tweets  - Part iii",
+  
+  "datePublished": "2020-06-07T00:00:00Z",
+  "dateModified": "2020-06-07T07:43:11+03:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "François de Ryckel"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "François de Ryckel",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "Introduction library(readr) # to read and write (import / export) any type into our R console. library(dplyr) # for pretty much all our data wrangling library(ggplot2) library(stringr) library(forcats) library(purrr) library(janitor) # to clear variable names with clean_names()  Using glove embedding GloVe is an unsupervised learning algorithm for obtaining vector representations for words."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Disaster Tweets  - Part iii | François de Ryckel</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">François de Ryckel</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">François de Ryckel</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#hero"><span>Demo</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Disaster Tweets  - Part iii</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    Sun, 07 Jun 2020	
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <a href="/post/disaster-tweets-part-iii/#disqus_thread"></a>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/category/r/">R</a></span>
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<pre class="r"><code>library(readr)      # to read and write (import / export) any type into our R console.
+library(dplyr)      # for pretty much all our data wrangling
+library(ggplot2)
+library(stringr)
+library(forcats)
+library(purrr)
+
+library(janitor)    # to clear variable names with clean_names()</code></pre>
+</div>
+<div id="using-glove-embedding" class="section level1">
+<h1>Using glove embedding</h1>
+<p>GloVe is an unsupervised learning algorithm for obtaining vector representations for words. Training is performed on aggregated global word-word co-occurrence statistics from a corpus, and the resulting representations showcase interesting linear substructures of the word vector space.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>GloVe encodes the ratios of word-word co-occurrence probabilities, which is thought to represent some crude form of meaning associated with the abstract concept of the word, as vector difference. The training objective of GloVe is to learn word vectors such that their dot product equals the logarithm of the words’ probability of co-occurrence.</p>
+<p>The simple workflow for vectorizing tweet text into glove embeddings is as follows - ^/[<a href="https://www.adityamangal.com/2020/02/nlp-with-disaster-tweets-part-1/" class="uri">https://www.adityamangal.com/2020/02/nlp-with-disaster-tweets-part-1/</a>]</p>
+<ol style="list-style-type: decimal">
+<li>Tokenize incoming tweet texts in the training data.</li>
+<li>Download and parse glove embeddings into an embedding matrix for the tokenized words.</li>
+<li>Generate embeddings vector for tweets text in training data.</li>
+<li>Generate embeddings vector for tweets text in test data.</li>
+<li>Append to given tweets features and export.</li>
+</ol>
+<p>We will not stem or lemmatize the tweets at first; this will keep most of the meaning in the word used.</p>
+<pre class="r"><code>clean_tweets &lt;- function(df){
+  df &lt;- df  %&gt;% 
+    mutate(number_hashtag = str_count(string = text, pattern = &quot;#&quot;), 
+           number_number = str_count(string = text, pattern = &quot;[0-9]&quot;) %&gt;% as.numeric(), 
+           number_http = str_count(string = text, pattern = &quot;http&quot;) %&gt;% as.numeric(), 
+           number_mention = str_count(string = text, pattern = &quot;@&quot;) %&gt;% as.numeric(), 
+           number_location = if_else(!is.na(location), 1, 0), 
+           number_keyword = if_else(!is.na(keyword), 1, 0), 
+           number_repeated_char = str_count(string = text, pattern = &quot;([a-z])\\1{2}&quot;) %&gt;% as.numeric(),  
+           text = str_replace_all(string = text, pattern = &quot;http[^[:space:]]*&quot;, replacement = &quot;&quot;), 
+           text = str_replace_all(string = text, pattern = &quot;@[^[:space:]]*&quot;, replacement = &quot;&quot;), 
+           number_char = nchar(text),   #add the length of the tweet in character. 
+           number_word = str_count(string = text, pattern = &quot;\\w+&quot;), 
+           text = str_replace_all(string = text, pattern = &quot;[0-9]&quot;, replacement = &quot;&quot;), 
+           text = future_map(text, function(.x) stringi::stri_trans_general(.x, &quot;Latin-ASCII&quot;)) %&gt;% unlist(.), 
+           text = str_replace_all(string = text, pattern  = &quot;\u0089&quot;, replacement = &quot;&quot;)) %&gt;% 
+  select(-keyword, -location) 
+  return(df)
+}
+
+library(furrr)
+plan(&quot;multicore&quot;)
+df_train &lt;- read_csv(&quot;~/disaster_tweets/data/train.csv&quot;) %&gt;% clean_tweets()
+
+# sorting out the same tweets, different target issues 
+temp &lt;- df_train %&gt;% group_by(text) %&gt;% 
+  mutate(mean_target = mean(target), 
+         new_target = if_else(mean_target &gt; 0.5, 1, 0)) %&gt;% ungroup() %&gt;% 
+  mutate(target = new_target, 
+         target_bin = factor(if_else(target == 1, &quot;a_truth&quot;, &quot;b_false&quot;))) %&gt;% 
+  select(-new_target, -mean_target, -target)
+
+df_train &lt;- temp</code></pre>
+<p>Using keras’ text_tokenizer to tokenize the text in tweets dataset.</p>
+<pre class="r"><code>library(keras)
+
+# we assign each word in the whole tweets df corpus an ID 
+tokenizer &lt;- text_tokenizer() %&gt;% fit_text_tokenizer(df_train$text)
+
+# if we want to check how many different words were in the corpus. 
+# we do +1 because we&#39;re dealing with Python. 
+num_words &lt;- length(tokenizer$word_index) + 1
+
+# Using the above fit tokenizer, one now convert all the text to an actual sequences of indices.
+sequences &lt;- texts_to_sequences(tokenizer, df_train$text)
+
+## how long is the longest tweet?  33 words! We can use that as the base for padding. 
+summary(map_int(sequences, length))</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.00    9.00   13.00   13.64   18.00   32.00</code></pre>
+<pre class="r"><code>max_tweet_length &lt;- max(map_int(sequences, length))
+
+# now, we need to pad all other tweet to a length of 33. 
+# by default we pad first, then put the text. 
+padded_sequences &lt;- pad_sequences(sequences = sequences, maxlen = max_tweet_length)
+
+# checking that we do have a 7613 tweets x 32 columns matrix. 
+dim(padded_sequences) </code></pre>
+<pre><code>## [1] 7613   32</code></pre>
+<p>Let’s have a look at the first 5 tweet were, their conversion into indices and their final padded form.</p>
+<pre class="r"><code># the first 5 tweets in words
+df_train$text[1:5]</code></pre>
+<pre><code>## [1] &quot;Our Deeds are the Reason of this #earthquake May ALLAH Forgive us all&quot;                                                                
+## [2] &quot;Forest fire near La Ronge Sask. Canada&quot;                                                                                               
+## [3] &quot;All residents asked to &#39;shelter in place&#39; are being notified by officers. No other evacuation or shelter in place orders are expected&quot;
+## [4] &quot;, people receive #wildfires evacuation orders in California&quot;                                                                          
+## [5] &quot;Just got sent this photo from Ruby #Alaska as smoke from #wildfires pours into a school&quot;</code></pre>
+<pre class="r"><code># the first 5 tweets in indices
+sequences[1:5]</code></pre>
+<pre><code>## [[1]]
+##  [1]  113 4389   20    1  830    5   18  247  135 1562 4390   84   36
+## 
+## [[2]]
+## [1]  184   42  215  764 6440 6441 1354
+## 
+## [[3]]
+##  [1]   36 1690 1563    4 6442    3 6443   20  128 6444   17 1691   35  419  241
+## [16]   53 2085    3  686 1355   20 1070
+## 
+## [[4]]
+## [1]   58 4391 1447  241 1355    3   91
+## 
+## [[5]]
+##  [1]   30   92 1182   18  312   19 6445 2356   26  256   19 1447 6446   66    2
+## [16]  179</code></pre>
+<pre class="r"><code># And the first tweet with padding 
+padded_sequences[1:5, ]</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]
+## [1,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0
+## [2,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0
+## [3,]    0    0    0    0    0    0    0    0    0     0    36  1690  1563     4
+## [4,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0
+## [5,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0
+##      [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25] [,26]
+## [1,]     0     0     0     0     0   113  4389    20     1   830     5    18
+## [2,]     0     0     0     0     0     0     0     0     0     0     0   184
+## [3,]  6442     3  6443    20   128  6444    17  1691    35   419   241    53
+## [4,]     0     0     0     0     0     0     0     0     0     0     0    58
+## [5,]     0     0    30    92  1182    18   312    19  6445  2356    26   256
+##      [,27] [,28] [,29] [,30] [,31] [,32]
+## [1,]   247   135  1562  4390    84    36
+## [2,]    42   215   764  6440  6441  1354
+## [3,]  2085     3   686  1355    20  1070
+## [4,]  4391  1447   241  1355     3    91
+## [5,]    19  1447  6446    66     2   179</code></pre>
+<p>??????? A total of 22701 unique words were assigned an index in the tokenization.</p>
+<p>Borrowing the code from Aditya Mangal’s blog <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> for parsing and generating glove embedding matrix from my deepSentimentR package.</p>
+<pre class="r"><code>parse_glove_embeddings &lt;- function(file_path) {
+  lines &lt;- readLines(file_path)
+  embeddings_index &lt;- new.env(hash = TRUE, parent = emptyenv())
+  for (i in 1:length(lines)) {
+    line &lt;- lines[[i]]
+    values &lt;- strsplit(line, &quot; &quot;)[[1]]
+    word &lt;- values[[1]]
+    embeddings_index[[word]] &lt;- as.double(values[-1])
+  }
+  cat(&quot;Found&quot;, length(embeddings_index), &quot;word vectors.\n&quot;)
+  return(embeddings_index)
+}
+
+generate_embedding_matrix &lt;- function(word_index, embedding_dim, max_words, glove_file_path) {
+  embeddings_index &lt;- parse_glove_embeddings(glove_file_path)
+
+  embedding_matrix &lt;- array(0, c(max_words, embedding_dim))
+  for (word in names(word_index)) {
+    index &lt;- word_index[[word]]
+    if (index &lt; max_words) {
+      embedding_vector &lt;- embeddings_index[[word]]
+      if (!is.null(embedding_vector)) {
+        embedding_matrix[index+1,] &lt;- embedding_vector
+      }
+    }
+  }
+
+  return(embedding_matrix)
+}</code></pre>
+<p>The Glove project has a Twitter dataset trained on 2B tweets with 27B tokens. It comes with word vectors that are 25d, 50d, 100d or 200d.</p>
+<p>We’ll try different variant and we’ll adjust in functions of our results.</p>
+<pre class="r"><code># To pick the length of each word vectors 
+embedding_dim &lt;- 25
+#embedding_dim &lt;- 50
+
+# this operation is the crux of the whole numerization of our text. 
+# we basically assign a word-vector for each word. We decided to go with a 50d dense vector.  
+embedding_matrix &lt;- generate_embedding_matrix(tokenizer$word_index, embedding_dim = 25, max_words = num_words, 
+                                             &quot;~/glove/glove.twitter.27B.25d.txt&quot;)</code></pre>
+<pre><code>## Found 1193514 word vectors.</code></pre>
+<pre class="r"><code>#embedding_matrix &lt;- generate_embedding_matrix(tokenizer$word_index, embedding_dim = 50, max_words = num_words, 
+ #                                            &quot;data_glove.twitter.27B/glove.twitter.27B.50d.txt&quot;)
+
+#there were around 12,638 different words in all the tweets.  We have change all of these words in a 50d vectors. 
+# so now we should have a matrix of dimension 12638 by 50
+dim(embedding_matrix)</code></pre>
+<pre><code>## [1] 15093    25</code></pre>
+<pre class="r"><code>#Let&#39;s save that precious matrix for further use
+#write_rds(x = embedding_matrix, path = &quot;data/embedding_matrix_50d.rds&quot;)
+write_rds(x = embedding_matrix, path = &quot;~/disaster_tweets/data/embedding_matrix_25d.rds&quot;)</code></pre>
+<p>Using the Keras modeling framework to generate embeddings for the given training data. We basically create a simple sequential model with one embedding layer whose weights we will freeze based on our embedding matrix created above, and a flattening layer that will flatten the output into a 2D matrix of dimensions 7613, 32x25 for 25d and (7613, 32x50) for 50d word vectors.</p>
+<p>Remember the longest tweet had 32 words. Each words is a 50d vector. So we want at the end matrix of 7613 x 1600 or (32x50). For many tweets, that matrix going to start with a bunch of zeros because of the padding. Remember the padding is at the start in our case.</p>
+<p>So we now we need to apply that embedding to each of the 7613 tweet. Keras will do that for us.</p>
+<pre class="r"><code>embedding_matrix &lt;- read_rds(&quot;~/disaster_tweets/data/embedding_matrix_25d.rds&quot;)
+#embedding_matrix &lt;- read_rds(&quot;data/embedding_matrix_50d.rds&quot;)
+
+model_embedding &lt;- keras_model_sequential() %&gt;% 
+  layer_embedding(input_dim = num_words, #number of total words in all of the tweets  
+                  output_dim = embedding_dim, #the length of our embedding vectors (50d in this case)
+                  input_length = max_tweet_length, #the number of words of the longest tweet.  All other tweets will be padded to have that length
+                  name = &quot;embedding&quot;) %&gt;% 
+  layer_flatten(name = &quot;flatten&quot;)
+
+model_embedding %&gt;% 
+  get_layer(name = &quot;embedding&quot;) %&gt;% 
+  set_weights(list(embedding_matrix)) %&gt;% 
+  freeze_weights()
+
+tweets_embedding &lt;- model_embedding %&gt;% predict(padded_sequences)</code></pre>
+<p>So, let’s make sense of what is happening. Each tweets is now 800 variables long (32 words x 25d). The first tweet was: [1] “Our deed be the Reason of this # earthquake May ALLAH Forgive us all”. This tweet is 13 words long. So the last 325 variables should be filled, when the first 475 should be 0s. Let’s check that.</p>
+<pre class="r"><code>str(tweets_embedding)</code></pre>
+<pre><code>##  num [1:7613, 1:800] 0 0 0 0 0 0 0 0 0 0 ...</code></pre>
+<pre class="r"><code># and part of the first tweet. 
+tweets_embedding[1, 450:500]</code></pre>
+<pre><code>##  [1]  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+##  [8]  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+## [15]  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000
+## [22]  0.000000  0.000000  0.000000  0.000000  0.000000 -0.420470  0.565260
+## [29] -0.033577  0.310190  0.189300 -0.645880  1.387600 -0.574840 -0.138960
+## [36] -0.390030 -0.169110 -0.073094 -5.702100  0.812640 -0.412840 -0.438670
+## [43]  0.361850 -0.344710  0.146530  0.076999 -1.275600 -0.631900 -0.635160
+## [50] -0.517290 -0.901670</code></pre>
+<p>We can now add these matrix to our initial df.</p>
+<pre class="r"><code>df_train_glove &lt;- bind_cols(df_train, as_tibble(tweets_embedding, .name_repair = &quot;unique&quot;) %&gt;% clean_names()) %&gt;% 
+  clean_names()
+
+# and let&#39;s save all this had work! 
+write_rds(x = df_train_glove, path = &quot;~/disaster_tweets/data/train_glove_25d.rds&quot;)
+#write_rds(x = df_train_glove, path = &quot;data/train_glove_50d.rds&quot;)</code></pre>
+<p>Before we go on and model, we still need to process our test data.</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://nlp.stanford.edu/projects/glove/" class="uri">https://nlp.stanford.edu/projects/glove/</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://www.adityamangal.com/2020/02/nlp-with-disaster-tweets-part-1/" class="uri">https://www.adityamangal.com/2020/02/nlp-with-disaster-tweets-part-1/</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/classification/">Classification</a>
+  
+  <a class="badge badge-light" href="/tag/kaggle/">kaggle</a>
+  
+  <a class="badge badge-light" href="/tag/nlp/">NLP</a>
+  
+  <a class="badge badge-light" href="/tag/text2vec/">text2vec</a>
+  
+</div>
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/post/disaster-tweets-part-iii/&amp;text=Disaster%20Tweets%20%20-%20Part%20iii" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/post/disaster-tweets-part-iii/&amp;t=Disaster%20Tweets%20%20-%20Part%20iii" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Disaster%20Tweets%20%20-%20Part%20iii&amp;body=/post/disaster-tweets-part-iii/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/post/disaster-tweets-part-iii/&amp;title=Disaster%20Tweets%20%20-%20Part%20iii" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="whatsapp://send?text=Disaster%20Tweets%20%20-%20Part%20iii%20/post/disaster-tweets-part-iii/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/post/disaster-tweets-part-iii/&amp;title=Disaster%20Tweets%20%20-%20Part%20iii" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+    
+    
+    
+      
+    
+    
+    
+    <div class="media author-card content-widget-hr">
+      
+        
+        <img class="avatar mr-3 avatar-circle" src="/author/francois-de-ryckel/avatar_hu2f41e612dcff73a93739a326eb68bc0c_287175_270x270_fill_lanczos_center_2.png" alt="François de Ryckel">
+      
+
+      <div class="media-body">
+        <h5 class="card-title"><a href="/">François de Ryckel</a></h5>
+        <h6 class="card-subtitle">Teacher, Farmer, Educational Data Analyst</h6>
+        <p class="card-text">A travelling educator with a strong interest in farming, finance and modeling.</p>
+        <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://twitter.com/Read_The_Dung" target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/francois-de-ryckel/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/fderyckel" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+      </div>
+    </div>
+  
+
+
+
+
+
+
+
+<section id="comments">
+  
+    
+<div id="disqus_thread"></div>
+<script>
+  let disqus_config = function () {
+    
+    
+    
+  };
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+      return;
+    }
+    var d = document, s = d.createElement('script'); s.async = true;
+    s.src = 'https://' + "fderyckelgithubio" + '.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  
+</section>
+
+
+
+
+
+
+
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    <script id="dsq-count-scr" src="https://fderyckelgithubio.disqus.com/count.js" async></script>
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.37431be2d92d7fb0160054761ab79602.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tidymodels | François de Ryckel</title>
-    <link>https://fderyckel.github.io/tag/tidymodels/</link>
-      <atom:link href="https://fderyckel.github.io/tag/tidymodels/index.xml" rel="self" type="application/rss+xml" />
+    <link>/tag/tidymodels/</link>
+      <atom:link href="/tag/tidymodels/index.xml" rel="self" type="application/rss+xml" />
     <description>tidymodels</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 26 May 2020 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>https://fderyckel.github.io/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
       <title>tidymodels</title>
-      <link>https://fderyckel.github.io/tag/tidymodels/</link>
+      <link>/tag/tidymodels/</link>
     </image>
     
     <item>
       <title>Disaster Tweets - Part II</title>
-      <link>https://fderyckel.github.io/post/disaster-tweets-part-ii/</link>
+      <link>/post/disaster-tweets-part-ii/</link>
       <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
-      <guid>https://fderyckel.github.io/post/disaster-tweets-part-ii/</guid>
+      <guid>/post/disaster-tweets-part-ii/</guid>
       <description>
 
 
@@ -262,7 +262,7 @@ metrics %&amp;gt;%
   geom_line() + 
   facet_wrap(~.metric) + 
   scale_x_log10()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-II/index_files/figure-html/grid-lasso-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;make-predictions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Make predictions&lt;/h2&gt;
@@ -384,7 +384,7 @@ write_rds(x = model_xgboost_svd, path = &amp;quot;~/disaster_tweets/data/model_x
 model_xgboost_svd %&amp;gt;% 
   pull_workflow_fit() %&amp;gt;% 
   vip::vip(geom = &amp;quot;point&amp;quot;, num_features=20) #%&amp;gt;% arrange(desc(Importance)) %&amp;gt;% &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;https://fderyckel.github.io/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/disaster-tweets-II/index_files/figure-html/vip-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Clearly, we can’t interpret anymore our variables as they are the result of singular variable decomposition of a tf-idf sparse matrix. However, we are happy to see that our extra variables have played a role in determining if a tweet was about real disaster or not.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -403,7 +403,7 @@ prediction_xgboost_svd %&amp;gt;% write_csv(path = &amp;quot;~/disaster_tweets/d
 &lt;p&gt;Note 2: majority voting, svd 500 wide, using xgboost with 200 mtry, 2000 trees, 6 tree-depth, got a 80.01 public score.&lt;/p&gt;
 &lt;p&gt;Note 3: majority voting, svd with 750 wide, using xgboost with 200 mtry, 2000 trees, 6 tree-depth, got 81.29% public score. Yeahhh!!!!!!!&lt;/p&gt;
 &lt;p&gt;Here is a screenshot of our results:&lt;br /&gt;
-&lt;img src=&#34;https://fderyckel.github.io/img/screenshot-results.png&#34; alt=&#34;screenshot of results&#34; /&gt;&lt;/p&gt;
+&lt;img src=&#34;/img/screenshot-results.png&#34; alt=&#34;screenshot of results&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;
